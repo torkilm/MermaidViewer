@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { renderDiagram } from '../services/mermaidService';
 import { BackIcon, DownloadIcon } from './Icons';
 import { sanitizeSvg, formatExportFilename } from '../utils/exportUtils';
+import { Footer } from './Footer';
 
 interface ViewerProps {
   code: string;
@@ -275,6 +276,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

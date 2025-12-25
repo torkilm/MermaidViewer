@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { PlayIcon, CodeIcon, TrashIcon, UndoIcon, RedoIcon } from './Icons';
+import { Footer } from './Footer';
 
 interface EditorProps {
   code: string;
@@ -150,6 +151,7 @@ export const Editor: React.FC<EditorProps> = ({
           <span className="text-lg">Generate Diagram</span>
         </button>
       </div>
+      <Footer />
     </div>
   );
 };
