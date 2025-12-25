@@ -414,7 +414,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
           </button>
         </div>
       </div>
-      <Footer code={code} title={title} />
+      <Footer code={code} title={title} viewMode="viewer" />
     </div>
   );
 };

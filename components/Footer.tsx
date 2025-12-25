@@ -5,17 +5,18 @@ import { getShareableUrl } from '../utils/exportUtils';
 interface FooterProps {
   code?: string;
   title?: string;
+  viewMode?: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram' }) => {
+export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram', viewMode = 'editor' }) => {
   const [copied, setCopied] = useState(false);
 
-  const currentUrl = getShareableUrl(code, title);
+  const currentUrl = getShareableUrl(code, title, viewMode);
   const shareText = 'Check out this Mermaid diagram!';
 
   const handleCopyUrl = async () => {
     try {
-      const shareableUrl = getShareableUrl(code, title);
+      const shareableUrl = getShareableUrl(code, title, viewMode);
       await navigator.clipboard.writeText(shareableUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

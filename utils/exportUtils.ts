@@ -55,15 +55,15 @@ export function formatExportFilename(title: string, date: Date = new Date()): st
 // URL Sharing utilities
 
 // Encode diagram code to URL-safe base64
-export const encodeDiagramToUrl = (code: string, title: string): string => {
-  const data = JSON.stringify({ code, title });
+export const encodeDiagramToUrl = (code: string, title: string, viewMode?: string): string => {
+  const data = JSON.stringify({ code, title, viewMode });
   // Use base64 encoding and make it URL-safe
   const base64 = btoa(encodeURIComponent(data));
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 };
 
 // Decode diagram code from URL-safe base64
-export const decodeDiagramFromUrl = (encoded: string): { code: string; title: string } | null => {
+export const decodeDiagramFromUrl = (encoded: string): { code: string; title: string; viewMode?: string } | null => {
   try {
     // Restore standard base64 format
     let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
@@ -80,21 +80,21 @@ export const decodeDiagramFromUrl = (encoded: string): { code: string; title: st
 };
 
 // Get diagram data from URL hash
-export const getDiagramFromUrl = (): { code: string; title: string } | null => {
+export const getDiagramFromUrl = (): { code: string; title: string; viewMode?: string } | null => {
   const hash = window.location.hash.slice(1); // Remove the '#'
   if (!hash) return null;
   return decodeDiagramFromUrl(hash);
 };
 
 // Update URL with diagram data without reloading
-export const updateUrlWithDiagram = (code: string, title: string): void => {
-  const encoded = encodeDiagramToUrl(code, title);
+export const updateUrlWithDiagram = (code: string, title: string, viewMode?: string): void => {
+  const encoded = encodeDiagramToUrl(code, title, viewMode);
   const newUrl = `${window.location.pathname}#${encoded}`;
   window.history.replaceState(null, '', newUrl);
 };
 
 // Get shareable URL
-export const getShareableUrl = (code: string, title: string): string => {
-  const encoded = encodeDiagramToUrl(code, title);
+export const getShareableUrl = (code: string, title: string, viewMode?: string): string => {
+  const encoded = encodeDiagramToUrl(code, title, viewMode);
   return `${window.location.origin}${window.location.pathname}#${encoded}`;
 };

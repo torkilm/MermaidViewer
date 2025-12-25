@@ -27,7 +27,14 @@ const App: React.FC = () => {
     return saved || APP_TITLE;
   });
 
-  const [mode, setMode] = useState<ViewMode>(ViewMode.EDITOR);
+  const [mode, setMode] = useState<ViewMode>(() => {
+    // First try to load from URL
+    const urlData = getDiagramFromUrl();
+    if (urlData?.viewMode) {
+      return urlData.viewMode === 'viewer' ? ViewMode.VIEWER : ViewMode.EDITOR;
+    }
+    return ViewMode.EDITOR;
+  });
   const [isSaving, setIsSaving] = useState(false);
   
   // History State
@@ -62,8 +69,9 @@ const App: React.FC = () => {
 
   // Sync URL with diagram data
   useEffect(() => {
-    updateUrlWithDiagram(code, title);
-  }, [code, title]);
+    const viewMode = mode === ViewMode.VIEWER ? 'viewer' : 'editor';
+    updateUrlWithDiagram(code, title, viewMode);
+  }, [code, title, mode]);
 
   const updateCode = useCallback((newCode: string, addToHistory = true) => {
     if (addToHistory && newCode !== code) {
