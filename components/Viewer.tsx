@@ -1,8 +1,8 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { renderDiagram } from '../services/mermaidService';
-import { BackIcon, DownloadIcon } from './Icons';
-import { sanitizeSvg, formatExportFilename } from '../utils/exportUtils';
+import { BackIcon, DownloadIcon, ShareIcon, CheckIcon } from './Icons';
+import { sanitizeSvg, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
 import { Footer } from './Footer';
 
 interface ViewerProps {
@@ -22,6 +22,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
   const [svgMarkup, setSvgMarkup] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState<boolean>(false);
   
   // Transform states
   const [scale, setScale] = useState<number>(1);
@@ -204,6 +205,17 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     
     if (newScale !== scale) {
       setScale(newScale);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareableUrl = getShareableUrl(code, title, 'viewer');
+      await navigator.clipboard.writeText(shareableUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
     }
   };
 
@@ -400,9 +412,13 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
       </main>
 
       <div className="p-4 pb-8 bg-slate-950/80 backdrop-blur-md border-t border-slate-900 shrink-0 z-20">
-        <div className="flex gap-3 max-w-2xl mx-auto">
+        <div className="flex gap-3 max-w-3xl mx-auto">
           <button onClick={onBack} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-2xl transition-all active:scale-[0.98]">
             <span>Back</span>
+          </button>
+          <button onClick={handleShare} disabled={!!error || isLoading} className={`flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] ${copied ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-sky-600 hover:bg-sky-500 active:bg-sky-700'} disabled:opacity-50 disabled:pointer-events-none text-white shadow-sky-600/20`}>
+            {copied ? <CheckIcon className="w-5 h-5" /> : <ShareIcon className="w-5 h-5" />}
+            <span className="text-base">{copied ? 'Copied!' : 'Share'}</span>
           </button>
           <button onClick={downloadSvg} disabled={!!error || isLoading} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none text-white font-bold rounded-2xl shadow-xl shadow-emerald-600/20 transition-all transform active:scale-[0.98]">
             <DownloadIcon className="w-5 h-5" />
@@ -414,7 +430,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
           </button>
         </div>
       </div>
-      <Footer code={code} title={title} viewMode="viewer" />
+      <Footer />
     </div>
   );
 };

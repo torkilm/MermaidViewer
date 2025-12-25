@@ -1,23 +1,16 @@
 import React, { useState } from 'react';
 import { FacebookIcon, LinkedInIcon, TwitterIcon, LinkIcon, CheckIcon } from './Icons';
-import { getShareableUrl } from '../utils/exportUtils';
 
-interface FooterProps {
-  code?: string;
-  title?: string;
-  viewMode?: string;
-}
-
-export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram', viewMode = 'editor' }) => {
+export const Footer: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
-  const currentUrl = getShareableUrl(code, title, viewMode);
-  const shareText = 'Check out this Mermaid diagram!';
+  // Share the app itself, not a specific diagram
+  const appUrl = `${window.location.origin}${window.location.pathname}`;
+  const shareText = 'Check out Mermaid Viewer - Create and share beautiful diagrams!';
 
   const handleCopyUrl = async () => {
     try {
-      const shareableUrl = getShareableUrl(code, title, viewMode);
-      await navigator.clipboard.writeText(shareableUrl);
+      await navigator.clipboard.writeText(appUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -26,29 +19,29 @@ export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram', vi
   };
 
   const handleFacebookShare = () => {
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(appUrl)}`;
     window.open(facebookUrl, '_blank', 'width=600,height=400');
   };
 
   const handleLinkedInShare = () => {
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(appUrl)}`;
     window.open(linkedInUrl, '_blank', 'width=600,height=400');
   };
 
   const handleTwitterShare = () => {
-    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareText)}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(appUrl)}&text=${encodeURIComponent(shareText)}`;
     window.open(twitterUrl, '_blank', 'width=600,height=400');
   };
 
   return (
     <footer className="bg-slate-900 border-t border-slate-800 py-4 px-6">
       <div className="max-w-4xl mx-auto flex items-center justify-center gap-2">
-        <span className="text-slate-400 text-sm font-medium mr-2">Share:</span>
+        <span className="text-slate-400 text-sm font-medium mr-2">Share Mermaid Viewer:</span>
         
         <button
           onClick={handleFacebookShare}
           className="p-2.5 text-slate-400 hover:text-blue-500 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          title="Share on Facebook"
+          title="Share Mermaid Viewer on Facebook"
           aria-label="Share on Facebook"
         >
           <FacebookIcon className="w-5 h-5" />
@@ -57,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram', vi
         <button
           onClick={handleLinkedInShare}
           className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          title="Share on LinkedIn"
+          title="Share Mermaid Viewer on LinkedIn"
           aria-label="Share on LinkedIn"
         >
           <LinkedInIcon className="w-5 h-5" />
@@ -66,7 +59,7 @@ export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram', vi
         <button
           onClick={handleTwitterShare}
           className="p-2.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          title="Share on Twitter"
+          title="Share Mermaid Viewer on Twitter"
           aria-label="Share on Twitter"
         >
           <TwitterIcon className="w-5 h-5" />
@@ -81,8 +74,8 @@ export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram', vi
               ? 'text-emerald-500 bg-emerald-500/10' 
               : 'text-slate-400 hover:text-indigo-400 hover:bg-slate-800'
           }`}
-          title="Copy URL"
-          aria-label="Copy URL to clipboard"
+          title="Copy app URL"
+          aria-label="Copy app URL to clipboard"
         >
           {copied ? (
             <CheckIcon className="w-5 h-5" />
