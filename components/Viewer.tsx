@@ -41,8 +41,8 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
       try {
         const svg = await renderDiagram('diagram-' + Date.now(), code);
         setSvgMarkup(svg);
-      } catch (err) {
-        setError('Failed to render diagram. Please check your syntax.');
+      } catch (err: any) {
+        setError(err?.message || 'Failed to render diagram. Please check your syntax.');
       } finally {
         setIsLoading(false);
       }
@@ -143,7 +143,6 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     const img = new Image();
     img.crossOrigin = "anonymous";
     
-    // Explicitly using charset=utf-8 for the data URL
     const encodedData = window.btoa(unescape(encodeURIComponent(svgData)));
     const dataUrl = 'data:image/svg+xml;charset=utf-8;base64,' + encodedData;
 
@@ -211,14 +210,21 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
             <p className="text-indigo-400 font-medium">Rendering...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-500/10 border border-red-500/50 p-6 rounded-2xl max-w-sm text-center z-10 mx-4">
-            <p className="text-red-400 font-bold mb-2">Oops!</p>
-            <p className="text-red-200 text-sm leading-relaxed">{error}</p>
+          <div className="bg-red-500/10 border border-red-500/50 p-8 rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm">
+            <div className="w-12 h-12 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+              </svg>
+            </div>
+            <h3 className="text-red-400 font-bold text-lg mb-2">Rendering Error</h3>
+            <p className="text-red-200/80 text-sm leading-relaxed mb-6 font-mono break-words">
+              {error}
+            </p>
             <button 
               onClick={onBack}
-              className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors"
+              className="w-full py-3 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-xl text-sm font-bold uppercase tracking-wider transition-all active:scale-95"
             >
-              Back to Fix
+              Back to Editor
             </button>
           </div>
         ) : (
@@ -233,7 +239,6 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
               ref={containerRef}
               className="min-w-full min-h-full flex items-center justify-center p-12 pointer-events-none"
               style={{ 
-                /* translate3d uses hardware acceleration for smoother motion */
                 transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
                 transformOrigin: 'center center',
                 transition: isPanningRef.current ? 'none' : 'transform 0.1s ease-out'

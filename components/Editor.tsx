@@ -71,7 +71,7 @@ export const Editor: React.FC<EditorProps> = ({
           </div>
           <div className="flex items-center gap-1.5 ml-9 mt-0.5">
             <span className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'text-indigo-400 animate-pulse' : 'text-slate-500'}`}>
-              {isSaving ? 'Saving...' : 'Saved to cloud'}
+              {isSaving ? 'Saving...' : 'Saved locally'}
             </span>
             {!isSaving && (
               <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
@@ -104,7 +104,6 @@ export const Editor: React.FC<EditorProps> = ({
 
           <div className="w-px h-6 bg-slate-800 mx-1"></div>
 
-          {/* Clear Button */}
           <button
             onClick={onClear}
             className="flex items-center gap-1.5 px-3 py-1.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all active:scale-95"
@@ -135,8 +134,8 @@ export const Editor: React.FC<EditorProps> = ({
 
         {/* Floating Helper Tip (Mobile Friendly) */}
         <div className="text-center">
-          <p className="text-slate-500 text-xs font-medium">
-            Paste your graph, flow, or sequence code above
+          <p className="text-slate-500 text-xs font-medium px-4">
+            Start with <code className="text-indigo-400">graph TD</code>, <code className="text-indigo-400">sequenceDiagram</code>, etc.
           </p>
         </div>
       </main>
