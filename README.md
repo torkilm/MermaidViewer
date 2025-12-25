@@ -36,6 +36,28 @@ View your app in AI Studio: https://ai.studio/apps/drive/1alEgdXsFG-IZhULnr0glwd
 - **Mouse wheel** - Scroll up/down to zoom in/out
 - **Click and drag** - Pan the diagram with mouse
 
+## Sharing Diagrams
+
+### URL Sharing
+Your diagrams are automatically encoded in the URL, making sharing simple and seamless:
+
+1. **Create or edit your diagram** - The URL updates automatically as you work
+2. **Copy the link** - Click the link icon (🔗) in the footer to copy the shareable URL
+3. **Share anywhere** - Send the URL via email, chat, or use the social media buttons
+4. **No account needed** - Recipients can view your diagram instantly without signing up
+
+The diagram data is encoded in the URL hash (the part after `#`), so:
+- ✅ Works completely offline once loaded
+- ✅ No data sent to any server
+- ✅ Privacy-friendly - your diagrams never leave your device
+- ✅ Perfect for collaboration and documentation
+
+### Social Media Sharing
+Use the built-in share buttons in the footer:
+- 📘 **Facebook** - Share on your timeline or in groups
+- 💼 **LinkedIn** - Share with your professional network
+- 🐦 **Twitter** - Tweet your diagram
+
 ## Run Locally
 
 **Prerequisites:**  Node.js
