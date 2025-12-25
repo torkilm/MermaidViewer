@@ -164,7 +164,7 @@ export const Editor: React.FC<EditorProps> = ({
                   rows={lineCount}
                   className="w-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
                   placeholder="%% Write your mermaid code here..."
-                  style={{ minHeight: '100%' }}
+                  style={{ minHeight: '100%', overflow: 'hidden' }}
                 />
               </div>
             </div>
