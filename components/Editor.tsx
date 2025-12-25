@@ -139,8 +139,8 @@ export const Editor: React.FC<EditorProps> = ({
           <div className="absolute top-3 right-4 z-10 opacity-40 text-xs font-mono uppercase tracking-widest pointer-events-none group-focus-within:opacity-100 transition-opacity">
             Mermaid Editor
           </div>
-          <div className="relative w-full h-full overflow-auto flex">
-            <div className="shrink-0 py-6 pl-4 pr-2 bg-slate-950/50 border-r border-slate-800 select-none pointer-events-none">
+          <div className="relative w-full h-full flex">
+            <div className="shrink-0 py-6 pl-4 pr-2 bg-slate-950/50 border-r border-slate-800 select-none pointer-events-none overflow-hidden">
               {Array.from({ length: lineCount }, (_, index) => (
                 <div
                   key={index}
@@ -151,20 +151,22 @@ export const Editor: React.FC<EditorProps> = ({
                 </div>
               ))}
             </div>
-            <div className="flex-1 relative" style={{ minHeight: '100%' }}>
-              <SyntaxHighlighter code={code} />
-              <textarea
-                value={code}
-                onChange={(e) => onChange(e.target.value)}
-                spellCheck={false}
-                autoCapitalize="none"
-                autoCorrect="off"
-                wrap="off"
-                rows={lineCount}
-                className="w-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
-                placeholder="%% Write your mermaid code here..."
-                style={{ minHeight: '100%' }}
-              />
+            <div className="flex-1 relative overflow-auto" style={{ minHeight: '100%' }}>
+              <div className="relative min-w-max" style={{ minHeight: '100%' }}>
+                <SyntaxHighlighter code={code} />
+                <textarea
+                  value={code}
+                  onChange={(e) => onChange(e.target.value)}
+                  spellCheck={false}
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  wrap="off"
+                  rows={lineCount}
+                  className="w-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
+                  placeholder="%% Write your mermaid code here..."
+                  style={{ minHeight: '100%' }}
+                />
+              </div>
             </div>
           </div>
         </div>

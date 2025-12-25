@@ -79,7 +79,7 @@ export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code }) =>
 
   return (
     <pre
-      className="absolute inset-0 p-6 font-mono text-[15px] leading-relaxed pointer-events-none whitespace-pre overflow-hidden"
+      className="absolute inset-0 p-6 font-mono text-[15px] leading-relaxed pointer-events-none whitespace-pre"
       dangerouslySetInnerHTML={{ __html: highlightSyntax(code) }}
     />
   );
