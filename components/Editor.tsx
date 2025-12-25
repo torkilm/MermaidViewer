@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { PlayIcon, CodeIcon, TrashIcon, UndoIcon, RedoIcon } from './Icons';
 import { Footer } from './Footer';
+import { SyntaxHighlighter } from './SyntaxHighlighter';
 
 interface EditorProps {
   code: string;
@@ -122,15 +123,19 @@ export const Editor: React.FC<EditorProps> = ({
           <div className="absolute top-3 right-4 z-10 opacity-40 text-xs font-mono uppercase tracking-widest pointer-events-none group-focus-within:opacity-100 transition-opacity">
             Mermaid Editor
           </div>
-          <textarea
-            value={code}
-            onChange={(e) => onChange(e.target.value)}
-            spellCheck={false}
-            autoCapitalize="none"
-            autoCorrect="off"
-            className="w-full h-full bg-transparent text-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600"
-            placeholder="%% Write your mermaid code here..."
-          />
+          <div className="relative w-full h-full overflow-auto">
+            <SyntaxHighlighter code={code} />
+            <textarea
+              value={code}
+              onChange={(e) => onChange(e.target.value)}
+              spellCheck={false}
+              autoCapitalize="none"
+              autoCorrect="off"
+              className="w-full h-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
+              placeholder="%% Write your mermaid code here..."
+              style={{ caretColor: '#e2e8f0' }}
+            />
+          </div>
         </div>
 
         {/* Floating Helper Tip (Mobile Friendly) */}
