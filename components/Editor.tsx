@@ -64,7 +64,7 @@ export const Editor: React.FC<EditorProps> = ({
       <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0">
         <div className="flex items-center gap-3 shrink-0">
           <a 
-            href="/" 
+            href="./" 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
             aria-label="Mermaid Go Home"
           >

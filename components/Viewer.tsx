@@ -320,7 +320,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
             <BackIcon className="w-6 h-6" />
           </button>
           <a 
-            href="/" 
+            href="./" 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
             aria-label="Mermaid Go Home"
           >
