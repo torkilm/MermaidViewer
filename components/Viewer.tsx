@@ -58,6 +58,11 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     setScale(1);
     setOffset({ x: 0, y: 0 });
   };
+  
+  const handleCenter = () => {
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
+  };
 
   const getDistance = (touches: React.TouchList) => {
     const dx = touches[0].clientX - touches[1].clientX;
@@ -297,6 +302,14 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
             </button>
             <button onClick={handleZoomOut} aria-label="Zoom Out" className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" /></svg>
+            </button>
+            
+            <div className="w-10 h-px bg-slate-700 mx-auto my-1"></div>
+            
+            <button onClick={handleCenter} aria-label="Center View" title="Center diagram" className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5m-4.5 0v4.5m0-4.5l5.25 5.25" />
+              </svg>
             </button>
           </div>
         )}
