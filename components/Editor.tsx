@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { PlayIcon, TrashIcon, UndoIcon, RedoIcon, MermaidGoLogo } from './Icons';
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
@@ -32,6 +32,7 @@ export const Editor: React.FC<EditorProps> = ({
   isSaving
 }) => {
   const [syntaxErrors, setSyntaxErrors] = useState<SyntaxError[]>([]);
+  const lineCount = useMemo(() => code.split('\n').length, [code]);
   
   useEffect(() => {
     const errors = validateMermaidSyntax(code);
@@ -140,7 +141,7 @@ export const Editor: React.FC<EditorProps> = ({
           </div>
           <div className="relative w-full h-full overflow-auto flex">
             <div className="shrink-0 py-6 pl-4 pr-2 bg-slate-950/50 border-r border-slate-800 select-none pointer-events-none">
-              {code.split('\n').map((_, index) => (
+              {Array.from({ length: lineCount }, (_, index) => (
                 <div
                   key={index}
                   className="font-mono text-[15px] leading-relaxed text-slate-600 text-right"
@@ -150,7 +151,7 @@ export const Editor: React.FC<EditorProps> = ({
                 </div>
               ))}
             </div>
-            <div className="flex-1 relative">
+            <div className="flex-1 relative" style={{ minHeight: '100%' }}>
               <SyntaxHighlighter code={code} />
               <textarea
                 value={code}
@@ -158,9 +159,10 @@ export const Editor: React.FC<EditorProps> = ({
                 spellCheck={false}
                 autoCapitalize="none"
                 autoCorrect="off"
-                className="w-full h-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
+                rows={lineCount}
+                className="w-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
                 placeholder="%% Write your mermaid code here..."
-                style={{ caretColor: '#e2e8f0' }}
+                style={{ minHeight: '100%' }}
               />
             </div>
           </div>
