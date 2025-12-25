@@ -1,8 +1,9 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlayIcon, CodeIcon, TrashIcon, UndoIcon, RedoIcon } from './Icons';
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
+import { validateMermaidSyntax, SyntaxError } from '../utils/syntaxValidator';
 
 interface EditorProps {
   code: string;
@@ -31,6 +32,13 @@ export const Editor: React.FC<EditorProps> = ({
   setTitle,
   isSaving
 }) => {
+  const [syntaxErrors, setSyntaxErrors] = useState<SyntaxError[]>([]);
+  
+  // Validate syntax on code change
+  useEffect(() => {
+    const errors = validateMermaidSyntax(code);
+    setSyntaxErrors(errors);
+  }, [code]);
   
   // Handle Keyboard Shortcuts
   useEffect(() => {
@@ -80,6 +88,14 @@ export const Editor: React.FC<EditorProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             )}
+            {syntaxErrors.length > 0 && (
+              <>
+                <span className="text-slate-600 mx-1">•</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">
+                  {syntaxErrors.length} {syntaxErrors.length === 1 ? 'Error' : 'Errors'}
+                </span>
+              </>
+            )}
           </div>
         </div>
         
@@ -123,20 +139,54 @@ export const Editor: React.FC<EditorProps> = ({
           <div className="absolute top-3 right-4 z-10 opacity-40 text-xs font-mono uppercase tracking-widest pointer-events-none group-focus-within:opacity-100 transition-opacity">
             Mermaid Editor
           </div>
-          <div className="relative w-full h-full overflow-auto">
-            <SyntaxHighlighter code={code} />
-            <textarea
-              value={code}
-              onChange={(e) => onChange(e.target.value)}
-              spellCheck={false}
-              autoCapitalize="none"
-              autoCorrect="off"
-              className="w-full h-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
-              placeholder="%% Write your mermaid code here..."
-              style={{ caretColor: '#e2e8f0' }}
-            />
+          <div className="relative w-full h-full overflow-auto flex">
+            {/* Line Numbers */}
+            <div className="shrink-0 py-6 pl-4 pr-2 bg-slate-950/50 border-r border-slate-800 select-none pointer-events-none">
+              {code.split('\n').map((_, index) => (
+                <div
+                  key={index}
+                  className="font-mono text-[15px] leading-relaxed text-slate-600 text-right"
+                  style={{ minWidth: '2.5rem' }}
+                >
+                  {index + 1}
+                </div>
+              ))}
+            </div>
+            {/* Code Editor Area */}
+            <div className="flex-1 relative">
+              <SyntaxHighlighter code={code} />
+              <textarea
+                value={code}
+                onChange={(e) => onChange(e.target.value)}
+                spellCheck={false}
+                autoCapitalize="none"
+                autoCorrect="off"
+                className="w-full h-full bg-transparent text-transparent caret-slate-200 p-6 font-mono text-[15px] leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-600 relative z-10"
+                placeholder="%% Write your mermaid code here..."
+                style={{ caretColor: '#e2e8f0' }}
+              />
+            </div>
           </div>
         </div>
+
+        {/* Syntax Errors Display */}
+        {syntaxErrors.length > 0 && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 space-y-2 max-h-32 overflow-y-auto">
+            {syntaxErrors.map((error, idx) => (
+              <div key={idx} className="flex items-start gap-2 text-sm">
+                <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
+                  error.severity === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
+                }`}>
+                  {error.severity === 'error' ? '✕' : '⚠'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-red-300 font-medium">Line {error.line}:</span>{' '}
+                  <span className="text-red-200/80">{error.message}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Floating Helper Tip (Mobile Friendly) */}
         <div className="text-center">
