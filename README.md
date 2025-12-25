@@ -23,13 +23,32 @@ View your app in AI Studio: https://ai.studio/apps/drive/1alEgdXsFG-IZhULnr0glwd
 
 ## Deployment
 
-This app is configured to deploy to GitHub Pages automatically when changes are pushed to the `main` branch. The deployment workflow:
+This app is configured to deploy to GitHub Pages automatically when changes are pushed to the `main` branch.
 
-1. Builds the application using `npm run build`
-2. Uploads the built artifacts to GitHub Pages
-3. Deploys to https://torkilm.github.io/MermaidViewer/
+### Initial Setup (Required)
 
-To enable GitHub Pages for your fork:
-1. Go to your repository Settings → Pages
-2. Set Source to "GitHub Actions"
-3. Push to the `main` branch to trigger the deployment
+**Before the deployment will work, you must enable GitHub Pages:**
+
+1. Go to your repository **Settings** → **Pages**
+2. Under "Source", select **"GitHub Actions"**
+3. Save the settings
+
+### Deployment Process
+
+Once GitHub Pages is enabled, the workflow will:
+
+1. Build the application using `npm run build`
+2. Upload the built artifacts to GitHub Pages
+3. Deploy to https://torkilm.github.io/MermaidViewer/
+
+The deployment is triggered automatically on:
+- Push to the `main` branch
+- Manual trigger via the Actions tab
+
+### Troubleshooting
+
+If you see a 404 error:
+- Verify GitHub Pages is enabled (Settings → Pages)
+- Check that Source is set to "GitHub Actions"
+- Review the workflow run in the Actions tab for any errors
+- Ensure the workflow has completed successfully
