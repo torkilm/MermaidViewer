@@ -4,14 +4,25 @@ import { ViewMode } from './types';
 import { DEFAULT_MERMAID_CODE, APP_TITLE } from './constants';
 import { Editor } from './components/Editor';
 import { Viewer } from './components/Viewer';
+import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
 
 const App: React.FC = () => {
   const [code, setCode] = useState<string>(() => {
+    // First try to load from URL
+    const urlData = getDiagramFromUrl();
+    if (urlData) return urlData.code;
+    
+    // Fall back to localStorage
     const saved = localStorage.getItem('mermaid-go-code');
     return saved || DEFAULT_MERMAID_CODE;
   });
   
   const [title, setTitle] = useState<string>(() => {
+    // First try to load from URL
+    const urlData = getDiagramFromUrl();
+    if (urlData) return urlData.title;
+    
+    // Fall back to localStorage
     const saved = localStorage.getItem('mermaid-go-title');
     return saved || APP_TITLE;
   });
@@ -48,6 +59,11 @@ const App: React.FC = () => {
       if (saveTimeoutRef.current) window.clearTimeout(saveTimeoutRef.current);
     };
   }, [code, title, performSave]);
+
+  // Sync URL with diagram data
+  useEffect(() => {
+    updateUrlWithDiagram(code, title);
+  }, [code, title]);
 
   const updateCode = useCallback((newCode: string, addToHistory = true) => {
     if (addToHistory && newCode !== code) {

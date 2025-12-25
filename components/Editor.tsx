@@ -206,7 +206,7 @@ export const Editor: React.FC<EditorProps> = ({
           <span className="text-lg">Generate Diagram</span>
         </button>
       </div>
-      <Footer />
+      <Footer code={code} title={title} />
     </div>
   );
 };

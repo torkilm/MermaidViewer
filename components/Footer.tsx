@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { FacebookIcon, LinkedInIcon, TwitterIcon, LinkIcon, CheckIcon } from './Icons';
+import { getShareableUrl } from '../utils/exportUtils';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  code?: string;
+  title?: string;
+}
+
+export const Footer: React.FC<FooterProps> = ({ code = '', title = 'Diagram' }) => {
   const [copied, setCopied] = useState(false);
 
-  const currentUrl = window.location.href;
+  const currentUrl = getShareableUrl(code, title);
   const shareText = 'Check out this Mermaid diagram!';
 
   const handleCopyUrl = async () => {
     try {
-      await navigator.clipboard.writeText(currentUrl);
+      const shareableUrl = getShareableUrl(code, title);
+      await navigator.clipboard.writeText(shareableUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
