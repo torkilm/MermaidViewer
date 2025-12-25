@@ -183,12 +183,6 @@ export const Editor: React.FC<EditorProps> = ({
             ))}
           </div>
         )}
-
-        <div className="text-center">
-          <p className="text-slate-500 text-xs font-medium px-4">
-            Start with <code className="text-indigo-400">graph TD</code>, <code className="text-indigo-400">sequenceDiagram</code>, etc.
-          </p>
-        </div>
       </main>
 
       <div className="p-4 pb-8 bg-slate-950/80 backdrop-blur-md border-t border-slate-900 shrink-0">
