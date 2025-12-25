@@ -152,7 +152,7 @@ export const Editor: React.FC<EditorProps> = ({
               ))}
             </div>
             <div className="flex-1 relative overflow-auto" style={{ minHeight: '100%' }}>
-              <div className="relative" style={{ minHeight: '100%', minWidth: 'max-content' }}>
+              <div className="relative min-w-max" style={{ minHeight: '100%' }}>
                 <SyntaxHighlighter code={code} />
                 <textarea
                   value={code}
