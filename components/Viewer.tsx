@@ -108,6 +108,39 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     initialDistanceRef.current = null;
   };
 
+  // Mouse handlers for desktop panning
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return; // Only handle left click
+    isPanningRef.current = true;
+    lastTouchRef.current = { 
+      x: e.clientX, 
+      y: e.clientY 
+    };
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isPanningRef.current) return;
+    
+    const deltaX = e.clientX - lastTouchRef.current.x;
+    const deltaY = e.clientY - lastTouchRef.current.y;
+    
+    setOffset(prev => ({
+      x: prev.x + deltaX,
+      y: prev.y + deltaY
+    }));
+    
+    lastTouchRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseUp = () => {
+    isPanningRef.current = false;
+  };
+
+  const handleMouseLeave = () => {
+    isPanningRef.current = false;
+  };
+
   const downloadPng = useCallback(() => {
     if (!containerRef.current) return;
 
@@ -235,6 +268,10 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
           >
             <div 
               ref={containerRef}
