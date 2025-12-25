@@ -1,6 +1,25 @@
 
 import React from 'react';
 
+export const MermaidGoLogo: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
+  <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <defs>
+      <linearGradient id="mermaid_grad" x1="50" y1="50" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#4F46E5" />
+        <stop offset="100%" stopColor="#10B981" />
+      </linearGradient>
+    </defs>
+    <path d="M 50 170 L 50 50 L 100 150 L 150 50 L 150 170" 
+          stroke="url(#mermaid_grad)" 
+          strokeWidth="24" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"/>
+    <circle cx="50" cy="50" r="26" fill="#4F46E5"/>
+    <circle cx="100" cy="150" r="26" fill="#4F46E5"/>
+    <circle cx="150" cy="50" r="26" fill="#4F46E5"/>
+  </svg>
+);
+
 export const PlayIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653z" />

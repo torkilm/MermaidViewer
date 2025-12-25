@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { renderDiagram } from '../services/mermaidService';
-import { BackIcon, DownloadIcon, ShareIcon, CheckIcon } from './Icons';
+import { BackIcon, DownloadIcon, ShareIcon, CheckIcon, MermaidGoLogo } from './Icons';
 import { sanitizeSvg, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
 import { Footer } from './Footer';
 
@@ -311,13 +311,23 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
   return (
     <div className="flex flex-col h-full bg-slate-900">
       <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0 z-20">
-        <button 
-          onClick={onBack}
-          className="p-2 -ml-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-all active:scale-90"
-          aria-label="Back to Editor"
-        >
-          <BackIcon className="w-6 h-6" />
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={onBack}
+            className="p-2 -ml-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-all active:scale-90"
+            aria-label="Back to Editor"
+          >
+            <BackIcon className="w-6 h-6" />
+          </button>
+          <a 
+            href="/" 
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
+            aria-label="Mermaid Go Home"
+          >
+            <MermaidGoLogo className="w-7 h-7" />
+            <span className="text-base font-bold text-white hidden sm:inline">Mermaid Go</span>
+          </a>
+        </div>
         
         <div className="flex-1 flex justify-center px-2">
           <input

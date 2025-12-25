@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { PlayIcon, CodeIcon, TrashIcon, UndoIcon, RedoIcon } from './Icons';
+import { PlayIcon, CodeIcon, TrashIcon, UndoIcon, RedoIcon, MermaidGoLogo } from './Icons';
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
 import { validateMermaidSyntax, SyntaxError } from '../utils/syntaxValidator';
@@ -66,7 +66,18 @@ export const Editor: React.FC<EditorProps> = ({
     <div className="flex flex-col h-full">
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0">
-        <div className="flex flex-col flex-1 min-w-0">
+        <div className="flex items-center gap-3 shrink-0">
+          <a 
+            href="/" 
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
+            aria-label="Mermaid Go Home"
+          >
+            <MermaidGoLogo className="w-8 h-8" />
+            <span className="text-lg font-bold text-white hidden sm:inline">Mermaid Go</span>
+          </a>
+        </div>
+        
+        <div className="flex flex-col flex-1 min-w-0 px-4">
           <div className="flex items-center gap-2">
             <div className="bg-indigo-600 p-1.5 rounded-lg shadow-lg shadow-indigo-500/20 shrink-0">
               <CodeIcon className="w-5 h-5 text-white" />
