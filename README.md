@@ -10,6 +10,32 @@ A mobile-first, ultra-lightweight Mermaid diagram renderer. Easily edit, view, a
 
 View your app in AI Studio: https://ai.studio/apps/drive/1alEgdXsFG-IZhULnr0glwdPtwAgTs137
 
+## Features
+
+- 📱 **Mobile-first design** - Works seamlessly on all devices
+- ✏️ **Live editor** with syntax highlighting for Mermaid diagrams
+- 🔍 **Interactive viewer** with zoom and pan controls
+- ⌨️ **Keyboard shortcuts** for efficient navigation
+- 🖱️ **Mouse wheel zoom** - Scroll to zoom in/out
+- 📥 **Export options** - Download as PNG or SVG
+- 🔗 **Share functionality** - Share diagrams via Facebook, LinkedIn, Twitter, or copy link
+- 💾 **Auto-save** - Your work is saved locally in your browser
+
+## Keyboard Shortcuts
+
+### Editor
+- `Ctrl+Z` / `Cmd+Z` - Undo
+- `Ctrl+Shift+Z` / `Cmd+Shift+Z` - Redo
+- `Ctrl+Y` / `Cmd+Y` - Redo (alternative)
+
+### Viewer
+- `+` or `=` - Zoom in
+- `-` or `_` - Zoom out
+- `0` - Reset zoom and center diagram
+- `↑` `↓` `←` `→` - Pan the diagram using arrow keys
+- **Mouse wheel** - Scroll up/down to zoom in/out
+- **Click and drag** - Pan the diagram with mouse
+
 ## Run Locally
 
 **Prerequisites:**  Node.js

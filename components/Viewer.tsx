@@ -64,6 +64,54 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     setOffset({ x: 0, y: 0 });
   };
 
+  // Keyboard shortcuts for zoom and panning
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input field
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      const PAN_AMOUNT = 50;
+
+      switch (e.key) {
+        case '+':
+        case '=':
+          e.preventDefault();
+          handleZoomIn();
+          break;
+        case '-':
+        case '_':
+          e.preventDefault();
+          handleZoomOut();
+          break;
+        case '0':
+          e.preventDefault();
+          handleCenter();
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setOffset(prev => ({ x: prev.x, y: prev.y + PAN_AMOUNT }));
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          setOffset(prev => ({ x: prev.x, y: prev.y - PAN_AMOUNT }));
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          setOffset(prev => ({ x: prev.x + PAN_AMOUNT, y: prev.y }));
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          setOffset(prev => ({ x: prev.x - PAN_AMOUNT, y: prev.y }));
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const getDistance = (touches: React.TouchList) => {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
@@ -146,6 +194,19 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     isPanningRef.current = false;
   };
 
+  // Mouse wheel for zooming
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    
+    const zoomIntensity = 0.001;
+    const delta = -e.deltaY * zoomIntensity;
+    const newScale = Math.min(Math.max(scale + delta, MIN_ZOOM), MAX_ZOOM);
+    
+    if (newScale !== scale) {
+      setScale(newScale);
+    }
+  };
+
   const downloadPng = useCallback(() => {
     if (!containerRef.current) return;
 
@@ -213,6 +274,28 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     img.src = dataUrl;
   }, [title]);
 
+  const downloadSvg = useCallback(() => {
+    if (!containerRef.current) return;
+
+    const originalSvg = containerRef.current.querySelector('svg');
+    if (!originalSvg) return;
+
+    const svgData = sanitizeSvg(originalSvg);
+    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    
+    const fileName = formatExportFilename(title).replace('.png', '.svg');
+    
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    
+    URL.revokeObjectURL(url);
+  }, [title]);
+
   return (
     <div className="flex flex-col h-full bg-slate-900">
       <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0 z-20">
@@ -277,6 +360,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
+            onWheel={handleWheel}
           >
             <div 
               ref={containerRef}
@@ -316,13 +400,17 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
       </main>
 
       <div className="p-4 pb-8 bg-slate-950/80 backdrop-blur-md border-t border-slate-900 shrink-0 z-20">
-        <div className="flex gap-3 max-w-md mx-auto">
+        <div className="flex gap-3 max-w-2xl mx-auto">
           <button onClick={onBack} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-2xl transition-all active:scale-[0.98]">
             <span>Back</span>
           </button>
-          <button onClick={downloadPng} disabled={!!error || isLoading} className="flex-[2] h-[56px] flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/20 transition-all transform active:scale-[0.98]">
-            <DownloadIcon className="w-6 h-6" />
-            <span className="text-lg">Download PNG</span>
+          <button onClick={downloadSvg} disabled={!!error || isLoading} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none text-white font-bold rounded-2xl shadow-xl shadow-emerald-600/20 transition-all transform active:scale-[0.98]">
+            <DownloadIcon className="w-5 h-5" />
+            <span className="text-base">SVG</span>
+          </button>
+          <button onClick={downloadPng} disabled={!!error || isLoading} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/20 transition-all transform active:scale-[0.98]">
+            <DownloadIcon className="w-5 h-5" />
+            <span className="text-base">PNG</span>
           </button>
         </div>
       </div>
