@@ -4,6 +4,7 @@ import { renderDiagram } from '../services/mermaidService';
 import { BackIcon, DownloadIcon, ShareIcon, CheckIcon, MermaidGoLogo } from './Icons';
 import { sanitizeSvg, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
 import { Footer } from './Footer';
+import { COLORS } from '../constants';
 
 interface ViewerProps {
   code: string;
@@ -244,10 +245,10 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
     if (!ctx) return;
 
     ctx.scale(exportScale, exportScale);
-    ctx.fillStyle = '#020617';
+    ctx.fillStyle = COLORS.primary.base;
     ctx.fillRect(0, 0, finalWidth, finalHeight);
 
-    ctx.fillStyle = '#f8fafc';
+    ctx.fillStyle = COLORS.text.primary;
     ctx.font = 'bold 32px Inter, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(title || 'Diagram', finalWidth / 2, 50);
@@ -309,8 +310,8 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
   }, [title]);
 
   return (
-    <div className="flex flex-col h-full bg-slate-900">
-      <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0 z-20">
+    <div className="flex flex-col h-full" style={{ backgroundColor: COLORS.primary.base }}>
+      <header className="flex items-center justify-between px-6 py-4 border-b shrink-0 z-20" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
         <div className="flex items-center gap-3">
           <button 
             onClick={onBack}
@@ -350,23 +351,26 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
 
         {isLoading ? (
           <div className="flex flex-col items-center gap-4 z-10">
-            <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-indigo-400 font-medium">Rendering...</p>
+            <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: COLORS.accent.base, borderTopColor: 'transparent' }}></div>
+            <p className="font-medium" style={{ color: COLORS.accent.base }}>Rendering...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-500/10 border border-red-500/50 p-8 rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm">
-            <div className="w-12 h-12 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="border rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.5)', padding: '2rem' }}>
+            <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: COLORS.error.base }}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
               </svg>
             </div>
-            <h3 className="text-red-400 font-bold text-lg mb-2">Rendering Error</h3>
-            <p className="text-red-200/80 text-sm leading-relaxed mb-6 font-mono break-words">
+            <h3 className="font-bold text-lg mb-2" style={{ color: COLORS.error.light }}>Rendering Error</h3>
+            <p className="text-sm leading-relaxed mb-6 font-mono break-words" style={{ color: COLORS.text.secondary }}>
               {error}
             </p>
             <button 
               onClick={onBack}
-              className="w-full py-3 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-xl text-sm font-bold uppercase tracking-wider transition-all active:scale-95"
+              className="w-full py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all active:scale-95"
+              style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: COLORS.text.primary }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.3)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
             >
               Back to Editor
             </button>
@@ -398,7 +402,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
         )}
 
         {!isLoading && !error && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 bg-slate-800/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700 shadow-2xl z-20">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 backdrop-blur-md p-1.5 rounded-2xl border shadow-2xl z-20" style={{ backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: COLORS.border.base }}>
             <button onClick={handleZoomIn} aria-label="Zoom In" className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
             </button>
@@ -421,20 +425,47 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
         )}
       </main>
 
-      <div className="p-4 pb-8 bg-slate-950/80 backdrop-blur-md border-t border-slate-900 shrink-0 z-20">
+      <div className="p-4 pb-8 backdrop-blur-md border-t shrink-0 z-20" style={{ backgroundColor: 'rgba(15, 23, 42, 0.8)', borderColor: COLORS.border.base }}>
         <div className="flex gap-3 max-w-3xl mx-auto">
-          <button onClick={onBack} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-2xl transition-all active:scale-[0.98]">
+          <button 
+            onClick={onBack} 
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl transition-all active:scale-[0.98]"
+            style={{ backgroundColor: COLORS.primary.lighter, color: COLORS.text.secondary }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.border.light}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.primary.lighter}
+          >
             <span>Back</span>
           </button>
-          <button onClick={handleShare} disabled={!!error || isLoading} className={`flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] ${copied ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-sky-600 hover:bg-sky-500 active:bg-sky-700'} disabled:opacity-50 disabled:pointer-events-none text-white shadow-sky-600/20`}>
+          <button 
+            onClick={handleShare} 
+            disabled={!!error || isLoading} 
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none" 
+            style={{ backgroundColor: copied ? COLORS.success.base : COLORS.accent.base, color: COLORS.text.primary }}
+            onMouseEnter={(e) => !copied && !error && !isLoading && (e.currentTarget.style.backgroundColor = COLORS.accent.hover)}
+            onMouseLeave={(e) => !copied && (e.currentTarget.style.backgroundColor = COLORS.accent.base)}
+          >
             {copied ? <CheckIcon className="w-5 h-5" /> : <ShareIcon className="w-5 h-5" />}
             <span className="text-base">{copied ? 'Copied!' : 'Share'}</span>
           </button>
-          <button onClick={downloadSvg} disabled={!!error || isLoading} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none text-white font-bold rounded-2xl shadow-xl shadow-emerald-600/20 transition-all transform active:scale-[0.98]">
+          <button 
+            onClick={downloadSvg} 
+            disabled={!!error || isLoading} 
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none" 
+            style={{ backgroundColor: COLORS.success.base, color: COLORS.text.primary }}
+            onMouseEnter={(e) => !error && !isLoading && (e.currentTarget.style.backgroundColor = COLORS.success.hover)}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.success.base}
+          >
             <DownloadIcon className="w-5 h-5" />
             <span className="text-base">SVG</span>
           </button>
-          <button onClick={downloadPng} disabled={!!error || isLoading} className="flex-1 h-[56px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/20 transition-all transform active:scale-[0.98]">
+          <button 
+            onClick={downloadPng} 
+            disabled={!!error || isLoading} 
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none" 
+            style={{ backgroundColor: COLORS.warning.base, color: COLORS.text.primary }}
+            onMouseEnter={(e) => !error && !isLoading && (e.currentTarget.style.backgroundColor = COLORS.warning.hover)}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.warning.base}
+          >
             <DownloadIcon className="w-5 h-5" />
             <span className="text-base">PNG</span>
           </button>

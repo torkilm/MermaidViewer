@@ -3,6 +3,7 @@ import { PlayIcon, TrashIcon, UndoIcon, RedoIcon, MermaidGoLogo } from './Icons'
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
 import { validateMermaidSyntax, SyntaxError } from '../utils/syntaxValidator';
+import { COLORS } from '../constants';
 
 interface EditorProps {
   code: string;
@@ -61,8 +62,8 @@ export const Editor: React.FC<EditorProps> = ({
   }, [onUndo, onRedo]);
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0">
+    <div className="flex flex-col h-full" style={{ backgroundColor: COLORS.primary.base }}>
+      <header className="flex items-center justify-between px-6 py-4 border-b shrink-0" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
         <div className="flex items-center gap-3 shrink-0">
           <a 
             href="./" 
@@ -83,18 +84,18 @@ export const Editor: React.FC<EditorProps> = ({
             placeholder="Untitled Diagram"
           />
           <div className="flex items-center gap-1.5 mt-1">
-            <span className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'text-indigo-400 animate-pulse' : 'text-slate-500'}`}>
+            <span className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'animate-pulse' : ''}`} style={{ color: isSaving ? COLORS.accent.base : COLORS.text.dark }}>
               {isSaving ? 'Saving...' : 'Saved locally'}
             </span>
             {!isSaving && (
-              <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3" style={{ color: COLORS.success.base }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             )}
             {syntaxErrors.length > 0 && (
               <>
-                <span className="text-slate-600 mx-1">•</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">
+                <span className="mx-1" style={{ color: COLORS.text.dark }}>•</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: COLORS.error.base }}>
                   {syntaxErrors.length} {syntaxErrors.length === 1 ? 'Error' : 'Errors'}
                 </span>
               </>
@@ -135,12 +136,12 @@ export const Editor: React.FC<EditorProps> = ({
       </header>
 
       <main className="flex-1 p-4 flex flex-col gap-4 overflow-hidden">
-        <div className="flex-1 relative bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-inner group">
+        <div className="flex-1 relative rounded-2xl border overflow-hidden shadow-inner group" style={{ backgroundColor: COLORS.primary.light, borderColor: COLORS.border.base }}>
           <div className="absolute top-3 right-4 z-10 opacity-40 text-xs font-mono uppercase tracking-widest pointer-events-none group-focus-within:opacity-100 transition-opacity">
             Mermaid Editor
           </div>
           <div className="relative w-full h-full flex">
-            <div className="shrink-0 py-6 pl-4 pr-2 bg-slate-950/50 border-r border-slate-800 select-none pointer-events-none overflow-hidden">
+            <div className="shrink-0 py-6 pl-4 pr-2 border-r select-none pointer-events-none overflow-hidden" style={{ backgroundColor: 'rgba(15, 23, 42, 0.5)', borderColor: COLORS.border.base }}>
               {Array.from({ length: lineCount }, (_, index) => (
                 <div
                   key={index}
@@ -190,10 +191,13 @@ export const Editor: React.FC<EditorProps> = ({
         )}
       </main>
 
-      <div className="p-4 pb-8 bg-slate-950/80 backdrop-blur-md border-t border-slate-900 shrink-0">
+      <div className="p-4 pb-8 backdrop-blur-md border-t shrink-0" style={{ backgroundColor: 'rgba(15, 23, 42, 0.8)', borderColor: COLORS.border.base }}>
         <button
           onClick={onGenerate}
-          className="w-full h-[56px] flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/20 transition-all transform active:scale-[0.98]"
+          className="w-full h-[56px] flex items-center justify-center gap-3 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98]"
+          style={{ backgroundColor: COLORS.accent.base, color: COLORS.text.primary }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.accent.hover}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.accent.base}
         >
           <PlayIcon className="w-6 h-6" />
           <span className="text-lg">Generate Diagram</span>

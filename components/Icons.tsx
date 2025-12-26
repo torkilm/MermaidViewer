@@ -1,12 +1,13 @@
 
 import React from 'react';
+import { COLORS } from '../constants';
 
 export const MermaidGoLogo: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
   <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <defs>
       <linearGradient id="mermaid_grad" x1="50" y1="50" x2="150" y2="150" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#4F46E5" />
-        <stop offset="100%" stopColor="#10B981" />
+        <stop offset="0%" stopColor={COLORS.accent.base} />
+        <stop offset="100%" stopColor={COLORS.success.base} />
       </linearGradient>
     </defs>
     <path d="M 50 170 L 50 50 L 100 150 L 150 50 L 150 170" 
@@ -14,9 +15,9 @@ export const MermaidGoLogo: React.FC<{ className?: string }> = ({ className = "w
           strokeWidth="24" 
           strokeLinecap="round" 
           strokeLinejoin="round"/>
-    <circle cx="50" cy="50" r="26" fill="#4F46E5"/>
-    <circle cx="100" cy="150" r="26" fill="#4F46E5"/>
-    <circle cx="150" cy="50" r="26" fill="#4F46E5"/>
+    <circle cx="50" cy="50" r="26" fill={COLORS.accent.base}/>
+    <circle cx="100" cy="150" r="26" fill={COLORS.accent.base}/>
+    <circle cx="150" cy="50" r="26" fill={COLORS.accent.base}/>
   </svg>
 );
 
