@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FacebookIcon, LinkedInIcon, TwitterIcon, LinkIcon, CheckIcon } from './Icons';
+import { COLORS } from '../constants';
 
 export const Footer: React.FC = () => {
   const [copied, setCopied] = useState(false);
@@ -34,7 +35,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-slate-900 border-t border-slate-800 py-4 px-6">
+    <footer className="border-t py-4 px-6" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
       <div className="max-w-4xl mx-auto flex items-center justify-center gap-2">
         <span className="text-slate-400 text-sm font-medium mr-2">Share Mermaid Viewer:</span>
         
