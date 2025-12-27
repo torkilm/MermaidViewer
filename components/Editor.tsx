@@ -68,10 +68,10 @@ export const Editor: React.FC<EditorProps> = ({
           <a 
             href="./" 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
-            aria-label="Mermaid Go Home"
+            aria-label="Mermaid Studio Home"
           >
             <MermaidGoLogo className="w-8 h-8" />
-            <span className="text-lg font-bold text-white hidden sm:inline">Mermaid Go</span>
+            <span className="text-lg font-bold text-white hidden sm:inline">Mermaid Studio</span>
           </a>
         </div>
         
