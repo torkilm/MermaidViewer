@@ -323,10 +323,10 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
           <a 
             href="./" 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
-            aria-label="Mermaid Go Home"
+            aria-label="Mermaid Studio Home"
           >
             <MermaidGoLogo className="w-7 h-7" />
-            <span className="text-base font-bold text-white hidden sm:inline">Mermaid Go</span>
+            <span className="text-base font-bold text-white hidden sm:inline">Mermaid Studio</span>
           </a>
         </div>
         
