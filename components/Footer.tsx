@@ -94,25 +94,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy, onNavigateT
         </div>
 
         {/* Privacy & Guide Links */}
-        <div className="text-center space-y-1">
-          <div>
-            <button
-              onClick={onNavigateToGuide}
-              className="text-xs hover:underline transition-all"
-              style={{ color: COLORS.accent.base }}
-            >
-              Mermaid Guide
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={onNavigateToPrivacy}
-              className="text-xs hover:underline transition-all"
-              style={{ color: COLORS.text.muted }}
-            >
-              Privacy Policy
-            </button>
-          </div>
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <button
+            onClick={onNavigateToGuide}
+            className="text-sm font-medium hover:underline transition-all px-3 py-1.5 rounded-lg hover:bg-slate-800"
+            style={{ color: COLORS.accent.base }}
+            aria-label="View Mermaid Guide"
+          >
+            📚 Mermaid Guide
+          </button>
+          <span style={{ color: COLORS.border.base }}>•</span>
+          <button
+            onClick={onNavigateToPrivacy}
+            className="text-sm hover:underline transition-all px-3 py-1.5 rounded-lg hover:bg-slate-800"
+            style={{ color: COLORS.text.muted }}
+            aria-label="View Privacy Policy"
+          >
+            Privacy Policy
+          </button>
         </div>
       </div>
     </footer>

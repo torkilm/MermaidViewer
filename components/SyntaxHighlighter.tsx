@@ -2,9 +2,10 @@ import React from 'react';
 
 interface SyntaxHighlighterProps {
   code: string;
+  inline?: boolean;
 }
 
-export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code }) => {
+export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code, inline = false }) => {
   const highlightSyntax = (text: string): string => {
     // Mermaid keywords
     const keywords = [
@@ -79,7 +80,10 @@ export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code }) =>
 
   return (
     <pre
-      className="absolute inset-0 p-6 font-mono text-[15px] leading-relaxed pointer-events-none whitespace-pre"
+      className={inline 
+        ? "font-mono text-[15px] leading-relaxed whitespace-pre m-0" 
+        : "absolute inset-0 p-6 font-mono text-[15px] leading-relaxed pointer-events-none whitespace-pre"
+      }
       dangerouslySetInnerHTML={{ __html: highlightSyntax(code) }}
     />
   );
