@@ -4,7 +4,9 @@ import { ViewMode } from './types';
 import { DEFAULT_MERMAID_CODE, APP_TITLE } from './constants';
 import { Editor } from './components/Editor';
 import { Viewer } from './components/Viewer';
+import { ConsentBanner } from './components/ConsentBanner';
 import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
+import { initializeGTM, hasGTMConsent } from './utils/gtm';
 
 const App: React.FC = () => {
   const [code, setCode] = useState<string>(() => {
@@ -80,6 +82,13 @@ const App: React.FC = () => {
     const hasEditedTitle = title !== APP_TITLE;
     setIsEdited(hasEditedCode || hasEditedTitle);
   }, [code, title]);
+  
+  // Initialize GTM if user has given consent
+  useEffect(() => {
+    if (hasGTMConsent()) {
+      initializeGTM();
+    }
+  }, []);
 
   // Sync URL with diagram data only if edited
   useEffect(() => {
@@ -134,6 +143,12 @@ const App: React.FC = () => {
     setTitle('');
   }, [updateCode]);
 
+  const handleConsent = useCallback((accepted: boolean) => {
+    if (accepted) {
+      initializeGTM();
+    }
+  }, []);
+
   return (
     <div className="flex flex-col h-full overflow-hidden bg-slate-950">
       {/* Dynamic View Rendering */}
@@ -160,6 +175,9 @@ const App: React.FC = () => {
           isEdited={isEdited}
         />
       )}
+      
+      {/* Consent Banner */}
+      <ConsentBanner onConsent={handleConsent} />
     </div>
   );
 };
