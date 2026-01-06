@@ -1,42 +1,28 @@
 /**
- * Google Tag Manager Initialization
- * Only loads GTM when user has given explicit consent
+ * Google Analytics (gtag.js) Initialization
+ * Only loads Google Analytics when user has given explicit consent
  */
 
-const GTM_ID = import.meta.env.VITE_GTM_ID;
+const GA_ID = 'G-8SC5M2QV91';
 
 export const initializeGTM = (): void => {
-  if (!GTM_ID) {
-    console.warn('GTM_ID not configured. Skipping GTM initialization.');
-    return;
-  }
-
   // Initialize dataLayer
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    'gtm.start': new Date().getTime(),
-    event: 'gtm.js'
-  });
+  
+  function gtag(...args: any[]) {
+    window.dataLayer.push(args);
+  }
+  
+  gtag('js', new Date());
+  gtag('config', GA_ID);
 
-  // Inject GTM script
+  // Inject Google Analytics script
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
   
   const firstScript = document.getElementsByTagName('script')[0];
   firstScript.parentNode?.insertBefore(script, firstScript);
-
-  // Inject noscript iframe
-  const noscript = document.createElement('noscript');
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://www.googletagmanager.com/ns.html?id=${GTM_ID}`;
-  iframe.height = '0';
-  iframe.width = '0';
-  iframe.style.display = 'none';
-  iframe.style.visibility = 'hidden';
-  noscript.appendChild(iframe);
-  
-  document.body.insertBefore(noscript, document.body.firstChild);
 };
 
 export const hasGTMConsent = (): boolean => {
