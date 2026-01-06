@@ -17,6 +17,13 @@ const App: React.FC = () => {
     return saved || DEFAULT_MERMAID_CODE;
   });
   
+  // Track if user has edited the diagram from defaults
+  const [isEdited, setIsEdited] = useState<boolean>(() => {
+    // If loading from URL hash, consider it edited (shared diagram)
+    const urlData = getDiagramFromUrl();
+    return !!urlData;
+  });
+  
   const [title, setTitle] = useState<string>(() => {
     // First try to load from URL
     const urlData = getDiagramFromUrl();
@@ -66,12 +73,24 @@ const App: React.FC = () => {
       if (saveTimeoutRef.current) window.clearTimeout(saveTimeoutRef.current);
     };
   }, [code, title, performSave]);
-
-  // Sync URL with diagram data
+  
+  // Track if user has edited from defaults
   useEffect(() => {
-    const viewMode = mode === ViewMode.VIEWER ? 'viewer' : 'editor';
-    updateUrlWithDiagram(code, title, viewMode);
-  }, [code, title, mode]);
+    const hasEditedCode = code !== DEFAULT_MERMAID_CODE;
+    const hasEditedTitle = title !== APP_TITLE;
+    setIsEdited(hasEditedCode || hasEditedTitle);
+  }, [code, title]);
+
+  // Sync URL with diagram data only if edited
+  useEffect(() => {
+    if (isEdited) {
+      const viewMode = mode === ViewMode.VIEWER ? 'viewer' : 'editor';
+      updateUrlWithDiagram(code, title, viewMode);
+    } else {
+      // Clear the hash to show clean domain
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [code, title, mode, isEdited]);
 
   const updateCode = useCallback((newCode: string, addToHistory = true) => {
     if (addToHistory && newCode !== code) {
@@ -138,6 +157,7 @@ const App: React.FC = () => {
           onBack={handleBack} 
           title={title}
           setTitle={setTitle}
+          isEdited={isEdited}
         />
       )}
     </div>

@@ -11,13 +11,14 @@ interface ViewerProps {
   onBack: () => void;
   title: string;
   setTitle: (title: string) => void;
+  isEdited: boolean;
 }
 
 const ZOOM_STEP = 0.2;
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
 
-export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle }) => {
+export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, isEdited }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [svgMarkup, setSvgMarkup] = useState<string>('');
@@ -211,8 +212,10 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle })
 
   const handleShare = async () => {
     try {
-      const shareableUrl = getShareableUrl(code, title, 'viewer');
-      await navigator.clipboard.writeText(shareableUrl);
+      const url = isEdited 
+        ? getShareableUrl(code, title, 'viewer')
+        : 'https://mermaidstudio.io';
+      await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
