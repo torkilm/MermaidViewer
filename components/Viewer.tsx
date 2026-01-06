@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { renderDiagram } from '../services/mermaidService';
-import { BackIcon, DownloadIcon, ShareIcon, CheckIcon, MermaidGoLogo } from './Icons';
+import { BackIcon, DownloadIcon, ShareIcon, CheckIcon, MermaidGoLogo, SettingsIcon } from './Icons';
 import { sanitizeSvg, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
 import { Footer } from './Footer';
 import { COLORS } from '../constants';
@@ -12,13 +12,14 @@ interface ViewerProps {
   title: string;
   setTitle: (title: string) => void;
   isEdited: boolean;
+  onOpenSettings: () => void;
 }
 
 const ZOOM_STEP = 0.2;
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
 
-export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, isEdited }) => {
+export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, isEdited, onOpenSettings }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [svgMarkup, setSvgMarkup] = useState<string>('');
@@ -344,7 +345,14 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
           />
         </div>
         
-        <div className="w-10"></div>
+        <button
+          onClick={onOpenSettings}
+          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all active:scale-90"
+          title="Settings"
+          aria-label="Open settings"
+        >
+          <SettingsIcon className="w-6 h-6" />
+        </button>
       </header>
 
       <main className="flex-1 relative overflow-hidden flex flex-col items-center justify-center">

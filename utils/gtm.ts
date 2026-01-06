@@ -52,6 +52,13 @@ export const hasRespondedToConsent = (): boolean => {
   return localStorage.getItem('gtm-consent') !== null;
 };
 
+export const revokeGTMConsent = (): void => {
+  setGTMConsent(false);
+  // Note: GTM script remains loaded but no new events will be tracked
+  // A full page reload would be needed to completely remove GTM
+  console.log('GTM consent revoked. Reload the page for full effect.');
+};
+
 // Declare dataLayer type
 declare global {
   interface Window {

@@ -5,6 +5,7 @@ import { DEFAULT_MERMAID_CODE, APP_TITLE } from './constants';
 import { Editor } from './components/Editor';
 import { Viewer } from './components/Viewer';
 import { ConsentBanner } from './components/ConsentBanner';
+import { SettingsModal } from './components/SettingsModal';
 import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
 import { initializeGTM, hasGTMConsent } from './utils/gtm';
 
@@ -45,6 +46,7 @@ const App: React.FC = () => {
     return ViewMode.EDITOR;
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
   // History State
   const [past, setPast] = useState<string[]>([]);
@@ -149,6 +151,15 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const handleConsentChange = useCallback((accepted: boolean) => {
+    if (accepted) {
+      initializeGTM();
+    } else {
+      // When consent is revoked, inform the user about page reload
+      console.log('Consent revoked. For full effect, please reload the page.');
+    }
+  }, []);
+
   return (
     <div className="flex flex-col h-full overflow-hidden bg-slate-950">
       {/* Dynamic View Rendering */}
@@ -165,6 +176,7 @@ const App: React.FC = () => {
           title={title}
           setTitle={setTitle}
           isSaving={isSaving}
+          onOpenSettings={() => setIsSettingsOpen(true)}
         />
       ) : (
         <Viewer 
@@ -173,11 +185,19 @@ const App: React.FC = () => {
           title={title}
           setTitle={setTitle}
           isEdited={isEdited}
+          onOpenSettings={() => setIsSettingsOpen(true)}
         />
       )}
       
       {/* Consent Banner */}
       <ConsentBanner onConsent={handleConsent} />
+      
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onConsentChange={handleConsentChange}
+      />
     </div>
   );
 };

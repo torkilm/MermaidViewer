@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { PlayIcon, TrashIcon, UndoIcon, RedoIcon, MermaidGoLogo } from './Icons';
+import { PlayIcon, TrashIcon, UndoIcon, RedoIcon, MermaidGoLogo, SettingsIcon } from './Icons';
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
 import { validateMermaidSyntax, SyntaxError } from '../utils/syntaxValidator';
@@ -17,6 +17,7 @@ interface EditorProps {
   title: string;
   setTitle: (title: string) => void;
   isSaving: boolean;
+  onOpenSettings: () => void;
 }
 
 export const Editor: React.FC<EditorProps> = ({ 
@@ -30,7 +31,8 @@ export const Editor: React.FC<EditorProps> = ({
   canRedo,
   title,
   setTitle,
-  isSaving
+  isSaving,
+  onOpenSettings
 }) => {
   const [syntaxErrors, setSyntaxErrors] = useState<SyntaxError[]>([]);
   const lineCount = useMemo(() => code.split('\n').length, [code]);
@@ -131,6 +133,15 @@ export const Editor: React.FC<EditorProps> = ({
           >
             <TrashIcon className="w-4 h-4" />
             <span className="text-sm font-medium hidden md:inline">Clear</span>
+          </button>
+
+          <button
+            onClick={onOpenSettings}
+            className="p-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all active:scale-90"
+            title="Settings"
+            aria-label="Open settings"
+          >
+            <SettingsIcon className="w-5 h-5" />
           </button>
         </div>
       </header>
