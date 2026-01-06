@@ -97,7 +97,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               What is Mermaid?
             </h2>
@@ -127,7 +127,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Flowcharts
             </h2>
@@ -212,7 +212,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Sequence Diagrams
             </h2>
@@ -264,7 +264,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Class Diagrams
             </h2>
@@ -320,7 +320,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               State Diagrams
             </h2>
@@ -344,7 +344,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Entity Relationship Diagrams
             </h2>
@@ -382,7 +382,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Gantt Charts
             </h2>
@@ -411,7 +411,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Pie Charts
             </h2>
@@ -434,7 +434,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Git Graphs
             </h2>
@@ -464,7 +464,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Tips & Best Practices
             </h2>
@@ -584,7 +584,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
           <section>
             <h2 
               className="text-xl md:text-2xl font-bold mb-4"
-              style={{ color: COLORS.text.primary }}
+              style={{ color: COLORS.accent.base }}
             >
               Resources & Tools
             </h2>
@@ -595,9 +595,6 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
                   Online Editors
                 </p>
                 <ul className="space-y-2 ml-6 list-disc" style={{ color: COLORS.text.secondary }}>
-                  <li className="leading-relaxed">
-                    <strong style={{ color: COLORS.text.primary }}>Mermaid Live Editor</strong> (mermaid.live) - Test and export diagrams
-                  </li>
                   <li className="leading-relaxed">
                     <strong style={{ color: COLORS.text.primary }}>GitHub/GitLab</strong> - Native Mermaid support in Markdown files
                   </li>
@@ -613,10 +610,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
                 </p>
                 <ul className="space-y-2 ml-6 list-disc" style={{ color: COLORS.text.secondary }}>
                   <li className="leading-relaxed">
-                    Official Mermaid docs: <strong style={{ color: COLORS.text.primary }}>mermaid.js.org</strong>
-                  </li>
-                  <li className="leading-relaxed">
-                    GitHub: <strong style={{ color: COLORS.text.primary }}>github.com/mermaid-js/mermaid</strong>
+                    GitHub: <a href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline" style={{ color: COLORS.accent.light }}>github.com/mermaid-js/mermaid</a>
                   </li>
                 </ul>
               </div>
