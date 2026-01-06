@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { COLORS } from '../constants';
-import { hasRespondedToConsent, setGTMConsent } from '../utils/gtm';
+import { hasGTMConsent, setGTMConsent } from '../utils/gtm';
 
 interface ConsentBannerProps {
   onConsent: (accepted: boolean) => void;
@@ -11,8 +11,8 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsent, onNavig
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Show banner only if user hasn't responded yet
-    if (!hasRespondedToConsent()) {
+    // Show banner if user hasn't accepted analytics (includes first-time visitors and those who declined)
+    if (!hasGTMConsent()) {
       // Delay slightly for better UX (doesn't interrupt initial render)
       const timer = setTimeout(() => setIsVisible(true), 1000);
       return () => clearTimeout(timer);
