@@ -128,10 +128,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               >
                 Status: {currentConsent ? 'Accepted' : 'Declined'}
                 {' • '}
-                {localStorage.getItem('gtm-consent-date') 
-                  ? `Last updated: ${new Date(localStorage.getItem('gtm-consent-date')!).toLocaleDateString()}`
-                  : 'Never updated'
-                }
+                {(() => {
+                  const consentDate = localStorage.getItem('gtm-consent-date');
+                  return consentDate 
+                    ? `Last updated: ${new Date(consentDate).toLocaleDateString()}`
+                    : 'Never updated';
+                })()}
               </p>
             </div>
 
@@ -160,13 +162,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           >
             <button
               onClick={onClose}
-              className="w-full h-12 font-semibold rounded-xl transition-all active:scale-[0.98]"
+              className="w-full h-12 font-semibold rounded-xl transition-all active:scale-[0.98] hover:opacity-90"
               style={{ 
                 backgroundColor: COLORS.accent.base, 
                 color: COLORS.text.primary 
               }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.accent.hover}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.accent.base}
             >
               Done
             </button>
