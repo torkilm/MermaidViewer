@@ -19,6 +19,7 @@ interface EditorProps {
   isSaving: boolean;
   onOpenSettings: () => void;
   onNavigateToPrivacy: () => void;
+  onNavigateToGuide: () => void;
 }
 
 export const Editor: React.FC<EditorProps> = ({ 
@@ -34,7 +35,8 @@ export const Editor: React.FC<EditorProps> = ({
   setTitle,
   isSaving,
   onOpenSettings,
-  onNavigateToPrivacy
+  onNavigateToPrivacy,
+  onNavigateToGuide
 }) => {
   const [syntaxErrors, setSyntaxErrors] = useState<SyntaxError[]>([]);
   const lineCount = useMemo(() => code.split('\n').length, [code]);
@@ -216,7 +218,7 @@ export const Editor: React.FC<EditorProps> = ({
           <span className="text-lg">Generate Diagram</span>
         </button>
       </div>
-      <Footer onNavigateToPrivacy={onNavigateToPrivacy} />
+      <Footer onNavigateToPrivacy={onNavigateToPrivacy} onNavigateToGuide={onNavigateToGuide} />
     </div>
   );
 };

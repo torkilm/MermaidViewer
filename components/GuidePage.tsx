@@ -1,0 +1,612 @@
+import React, { useState } from 'react';
+import { COLORS } from '../constants';
+import { CloseIcon, CheckIcon } from './Icons';
+import { SyntaxHighlighter } from './SyntaxHighlighter';
+
+interface GuidePageProps {
+  onBack: () => void;
+}
+
+interface CodeBlockState {
+  [key: string]: boolean;
+}
+
+export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
+  const [copiedBlocks, setCopiedBlocks] = useState<CodeBlockState>({});
+
+  const handleCopyCode = async (code: string, blockId: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedBlocks(prev => ({ ...prev, [blockId]: true }));
+      setTimeout(() => {
+        setCopiedBlocks(prev => ({ ...prev, [blockId]: false }));
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy code:', err);
+    }
+  };
+
+  const CodeBlock = ({ code, blockId }: { code: string; blockId: string }) => {
+    const isCopied = copiedBlocks[blockId];
+    return (
+      <div className="relative mb-6 rounded-lg overflow-hidden" style={{ backgroundColor: COLORS.primary.light }}>
+        <button
+          onClick={() => handleCopyCode(code, blockId)}
+          className="absolute top-4 right-4 p-2 rounded-lg transition-all z-10"
+          style={{
+            backgroundColor: isCopied ? COLORS.success.base : COLORS.accent.base,
+            color: COLORS.text.primary,
+          }}
+          title={isCopied ? 'Copied!' : 'Copy code'}
+        >
+          {isCopied ? <CheckIcon className="w-4 h-4" /> : <span className="text-xs font-medium">Copy</span>}
+        </button>
+        <div className="p-6 pr-20 overflow-auto max-h-screen">
+          <SyntaxHighlighter code={code} />
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div 
+      className="min-h-screen overflow-auto"
+      style={{ backgroundColor: COLORS.primary.base }}
+    >
+      {/* Header */}
+      <div 
+        className="sticky top-0 z-10 border-b"
+        style={{ 
+          backgroundColor: COLORS.primary.base,
+          borderColor: COLORS.border.base 
+        }}
+      >
+        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+          <h1 
+            className="text-2xl font-bold"
+            style={{ color: COLORS.text.primary }}
+          >
+            Mermaid Diagram Guide
+          </h1>
+          <button
+            onClick={onBack}
+            className="p-2 rounded-lg hover:bg-slate-800 transition-colors"
+            style={{ color: COLORS.text.secondary }}
+            aria-label="Back to app"
+            title="Back to app"
+          >
+            <CloseIcon className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-6 py-8 pb-24">
+        <div className="space-y-12">
+          {/* Introduction */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              What is Mermaid?
+            </h2>
+            <p 
+              className="text-lg leading-relaxed mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Mermaid is a JavaScript-based diagramming and charting tool that uses Markdown-inspired text definitions to create and modify diagrams dynamically. Think of it as drawing with words!
+            </p>
+            <div className="space-y-2">
+              <p style={{ color: COLORS.text.secondary }}>
+                <strong style={{ color: COLORS.text.primary }}>Simple syntax</strong> - If you can write text, you can make diagrams
+              </p>
+              <p style={{ color: COLORS.text.secondary }}>
+                <strong style={{ color: COLORS.text.primary }}>Version control friendly</strong> - Your diagrams live in your code
+              </p>
+              <p style={{ color: COLORS.text.secondary }}>
+                <strong style={{ color: COLORS.text.primary }}>No external tools needed</strong> - Works right in your editor
+              </p>
+              <p style={{ color: COLORS.text.secondary }}>
+                <strong style={{ color: COLORS.text.primary }}>Beautiful results</strong> - Professional-looking diagrams every time
+              </p>
+            </div>
+          </section>
+
+          {/* Flowcharts */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Flowcharts
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Flowcharts are the bread and butter of Mermaid. They're perfect for showing processes, decisions, and workflows.
+            </p>
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Basic Flowchart
+            </h3>
+            <CodeBlock code={`graph TD
+    A[Start Here] --> B[Learn Mermaid]
+    B --> C[Create Amazing Diagrams]`} blockId="flowchart-basic" />
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Direction Options
+            </h3>
+            <p 
+              className="mb-3"
+              style={{ color: COLORS.text.secondary }}
+            >
+              <strong style={{ color: COLORS.text.primary }}>TD/TB</strong> - Top to Bottom | <strong style={{ color: COLORS.text.primary }}>BT</strong> - Bottom to Top | <strong style={{ color: COLORS.text.primary }}>LR</strong> - Left to Right | <strong style={{ color: COLORS.text.primary }}>RL</strong> - Right to Left
+            </p>
+            <CodeBlock code={`graph LR
+    A[First] --> B[Second] --> C[Third]`} blockId="flowchart-direction" />
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Node Shapes
+            </h3>
+            <CodeBlock code={`graph TD
+    A[Rectangle - Basic Node]
+    B(Rounded Rectangle)
+    C([Stadium - Start/End])
+    D{{Hexagon}}
+    E{Diamond - Decision}
+    F[(Database)]
+    G((Circle))`} blockId="flowchart-shapes" />
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Real-World Example: User Registration
+            </h3>
+            <CodeBlock code={`graph TD
+    A[User Visits Site] --> B{Registered?}
+    B -->|Yes| C[Login]
+    B -->|No| D[Registration Form]
+    D --> E{Valid Data?}
+    E -->|No| D
+    E -->|Yes| F[Create Account]
+    F --> G[Send Welcome Email]
+    G --> H[Redirect to Dashboard]
+    C --> H`} blockId="flowchart-example" />
+          </section>
+
+          {/* Sequence Diagrams */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Sequence Diagrams
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Sequence diagrams are perfect for showing interactions between different actors or systems over time.
+            </p>
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Basic Sequence Diagram
+            </h3>
+            <CodeBlock code={`sequenceDiagram
+    participant User
+    participant System
+    participant Database
+    
+    User->>System: Request data
+    System->>Database: Query
+    Database-->>System: Return results
+    System-->>User: Display data`} blockId="sequence-basic" />
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              With Activations & Loops
+            </h3>
+            <CodeBlock code={`sequenceDiagram
+    participant User
+    participant API
+    participant DB
+    
+    User->>+API: Login request
+    API->>+DB: Check credentials
+    DB-->>-API: Valid user
+    API-->>-User: Success token
+    
+    loop Every 5 minutes
+        API->>API: Check for updates
+    end`} blockId="sequence-advanced" />
+          </section>
+
+          {/* Class Diagrams */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Class Diagrams
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Perfect for showing relationships between classes in your code.
+            </p>
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Basic Class Diagram
+            </h3>
+            <CodeBlock code={`classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    
+    class Dog {
+        +String breed
+        +bark()
+    }
+    
+    class Cat {
+        +String color
+        +meow()
+    }
+    
+    Animal <|-- Dog
+    Animal <|-- Cat`} blockId="class-basic" />
+
+            <h3 
+              className="text-xl font-semibold mb-3 mt-6"
+              style={{ color: COLORS.accent.base }}
+            >
+              Relationship Types
+            </h3>
+            <CodeBlock code={`classDiagram
+    classA <|-- classB : Inheritance
+    classC *-- classD : Composition
+    classE o-- classF : Aggregation
+    classG <-- classH : Association
+    classI -- classJ : Link
+    classK <|.. classL : Realization`} blockId="class-relationships" />
+          </section>
+
+          {/* State Diagrams */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              State Diagrams
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Show how objects move through different states.
+            </p>
+
+            <CodeBlock code={`stateDiagram-v2
+    [*] --> Draft
+    Draft --> Review : Submit
+    Review --> Approved : Accept
+    Review --> Draft : Request changes
+    Approved --> Published : Publish
+    Published --> [*]`} blockId="state-basic" />
+          </section>
+
+          {/* Entity Relationship */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Entity Relationship Diagrams
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Perfect for designing and documenting databases.
+            </p>
+
+            <CodeBlock code={`erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE-ITEM : contains
+    
+    CUSTOMER {
+        string id
+        string name
+        string email
+    }
+    
+    ORDER {
+        string orderNumber
+        date orderDate
+        string status
+    }
+    
+    LINE-ITEM {
+        string productCode
+        int quantity
+        float price
+    }`} blockId="er-diagram" />
+          </section>
+
+          {/* Gantt Charts */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Gantt Charts
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Visualize project timelines and dependencies.
+            </p>
+
+            <CodeBlock code={`gantt
+    title Project Development Schedule
+    dateFormat YYYY-MM-DD
+    
+    section Planning
+    Requirements gathering :a1, 2024-01-01, 10d
+    Design mockups :a2, after a1, 15d
+    
+    section Development
+    Backend development :b1, 2024-01-20, 30d
+    Frontend development :b2, after a2, 25d
+    Integration :b3, after b1 b2, 10d`} blockId="gantt-chart" />
+          </section>
+
+          {/* Pie Charts */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Pie Charts
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Simple but effective for showing distributions.
+            </p>
+
+            <CodeBlock code={`pie title Project Time Distribution
+    "Development" : 45
+    "Testing" : 20
+    "Meetings" : 15
+    "Documentation" : 12
+    "Other" : 8`} blockId="pie-chart" />
+          </section>
+
+          {/* Git Graph */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Git Graphs
+            </h2>
+            <p 
+              className="mb-4"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Visualize your Git branching strategy.
+            </p>
+
+            <CodeBlock code={`gitGraph
+    commit id: "Initial commit"
+    branch develop
+    checkout develop
+    commit id: "Add feature framework"
+    branch feature-login
+    checkout feature-login
+    commit id: "Create login form"
+    commit id: "Add validation"
+    checkout develop
+    merge feature-login
+    checkout main
+    merge develop tag: "v1.0"`} blockId="git-graph" />
+          </section>
+
+          {/* Tips & Best Practices */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Tips & Best Practices
+            </h2>
+            
+            <div className="space-y-4">
+              <div>
+                <h3 
+                  className="text-lg font-semibold mb-2"
+                  style={{ color: COLORS.accent.base }}
+                >
+                  Keep It Simple
+                </h3>
+                <p 
+                  className="mb-3"
+                  style={{ color: COLORS.text.secondary }}
+                >
+                  Start with basic diagrams and add complexity as needed. A simple, clear diagram beats a complex, confusing one every time!
+                </p>
+              </div>
+
+              <div>
+                <h3 
+                  className="text-lg font-semibold mb-2"
+                  style={{ color: COLORS.accent.base }}
+                >
+                  Use Meaningful Names
+                </h3>
+                <CodeBlock code={`graph LR
+    A[User Login] --> B{Credentials Valid?}
+    B -->|Yes| C[Dashboard]
+    B -->|No| D[Error Message]`} blockId="tip-names" />
+              </div>
+
+              <div>
+                <h3 
+                  className="text-lg font-semibold mb-2"
+                  style={{ color: COLORS.accent.base }}
+                >
+                  Break Complex Diagrams
+                </h3>
+                <p 
+                  style={{ color: COLORS.text.secondary }}
+                >
+                  Instead of one massive diagram, create several focused diagrams that each tell part of the story.
+                </p>
+              </div>
+
+              <div>
+                <h3 
+                  className="text-lg font-semibold mb-2"
+                  style={{ color: COLORS.accent.base }}
+                >
+                  Use Comments
+                </h3>
+                <CodeBlock code={`graph TD
+    %% This is a comment
+    A[Start] --> B[Process]
+    %% Comments help explain your diagram
+    B --> C[End]`} blockId="tip-comments" />
+              </div>
+            </div>
+          </section>
+
+          {/* Common Pitfalls */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.warning.base }}
+            >
+              Common Pitfalls to Avoid
+            </h2>
+            
+            <div className="space-y-4">
+              <div>
+                <h3 
+                  className="text-lg font-semibold mb-2"
+                  style={{ color: COLORS.text.primary }}
+                >
+                  Watch Your Syntax
+                </h3>
+                <p 
+                  className="mb-2"
+                  style={{ color: COLORS.text.secondary }}
+                >
+                  Mermaid is picky about syntax. Missing spaces, wrong arrow types, or typos can break your diagram.
+                </p>
+                <p 
+                  className="text-sm font-mono mb-2"
+                  style={{ color: COLORS.error.light }}
+                >
+                  ❌ Wrong: graph TD A-&gt;B
+                </p>
+                <p 
+                  className="text-sm font-mono"
+                  style={{ color: COLORS.success.light }}
+                >
+                  ✓ Right: graph TD A --&gt; B
+                </p>
+              </div>
+
+              <div>
+                <h3 
+                  className="text-lg font-semibold mb-2"
+                  style={{ color: COLORS.text.primary }}
+                >
+                  Use Quotes for Special Characters
+                </h3>
+                <CodeBlock code={`graph TD
+    A["Text with: special characters!"]
+    B["More (special) text"]`} blockId="pitfall-quotes" />
+              </div>
+            </div>
+          </section>
+
+          {/* Resources */}
+          <section>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.text.primary }}
+            >
+              Resources & Tools
+            </h2>
+            
+            <div className="space-y-3">
+              <div>
+                <p style={{ color: COLORS.text.secondary }}>
+                  <strong style={{ color: COLORS.accent.base }}>Online Editors:</strong>
+                </p>
+                <ul style={{ color: COLORS.text.secondary, marginLeft: '1.5rem' }} className="list-disc">
+                  <li><strong>Mermaid Live Editor</strong> (mermaid.live) - Test and export diagrams</li>
+                  <li><strong>GitHub/GitLab</strong> - Native Mermaid support in Markdown files</li>
+                  <li><strong>Notion</strong> - Supports Mermaid code blocks</li>
+                </ul>
+              </div>
+
+              <div>
+                <p style={{ color: COLORS.text.secondary }}>
+                  <strong style={{ color: COLORS.accent.base }}>Official Documentation:</strong>
+                </p>
+                <ul style={{ color: COLORS.text.secondary, marginLeft: '1.5rem' }} className="list-disc">
+                  <li>Official Mermaid docs: <strong>mermaid.js.org</strong></li>
+                  <li>GitHub: <strong>github.com/mermaid-js/mermaid</strong></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* Conclusion */}
+          <section className="border-t pt-8" style={{ borderColor: COLORS.border.base }}>
+            <h2 
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.success.base }}
+            >
+              Your Mermaid Journey Begins!
+            </h2>
+            <p 
+              className="text-lg leading-relaxed"
+              style={{ color: COLORS.text.secondary }}
+            >
+              Congratulations! You now have all the tools you need to create stunning diagrams with Mermaid. Remember: start simple, practice regularly, experiment with different diagram types, share your work, and most importantly—have fun!
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};

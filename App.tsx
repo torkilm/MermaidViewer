@@ -7,20 +7,23 @@ import { Viewer } from './components/Viewer';
 import { ConsentBanner } from './components/ConsentBanner';
 import { SettingsModal } from './components/SettingsModal';
 import { Privacy } from './components/Privacy';
+import { GuidePage } from './components/GuidePage';
 import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
 import { initializeGTM, hasGTMConsent } from './utils/gtm';
 
 const App: React.FC = () => {
-  // Route state - check if we're on the privacy page using hash with 'route:' prefix
+  // Route state - check current pathname for routing
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
-    const hash = window.location.hash;
-    return hash === '#route:privacy' ? 'privacy' : 'app';
+    const pathname = window.location.pathname;
+    if (pathname === '/mermaid-guide') return 'guide';
+    if (pathname === '/privacy') return 'privacy';
+    return 'app';
   });
 
   const [code, setCode] = useState<string>(() => {
-    // Only try to load from URL if not on a route page
-    const hash = window.location.hash;
-    if (!hash.startsWith('#route:')) {
+    // Only try to load from URL if on main app route
+    const pathname = window.location.pathname;
+    if (pathname === '/' || pathname === '') {
       const urlData = getDiagramFromUrl();
       if (urlData) return urlData.code;
     }
@@ -32,9 +35,9 @@ const App: React.FC = () => {
   
   // Track if user has edited the diagram from defaults
   const [isEdited, setIsEdited] = useState<boolean>(() => {
-    // If loading from URL hash (but not a route), consider it edited (shared diagram)
-    const hash = window.location.hash;
-    if (!hash.startsWith('#route:')) {
+    // If loading from URL (on main app route), consider it edited (shared diagram)
+    const pathname = window.location.pathname;
+    if (pathname === '/' || pathname === '') {
       const urlData = getDiagramFromUrl();
       return !!urlData;
     }
@@ -42,9 +45,9 @@ const App: React.FC = () => {
   });
   
   const [title, setTitle] = useState<string>(() => {
-    // Only try to load from URL if not on a route page
-    const hash = window.location.hash;
-    if (!hash.startsWith('#route:')) {
+    // Only try to load from URL if on main app route
+    const pathname = window.location.pathname;
+    if (pathname === '/' || pathname === '') {
       const urlData = getDiagramFromUrl();
       if (urlData) return urlData.title;
     }
@@ -55,9 +58,9 @@ const App: React.FC = () => {
   });
 
   const [mode, setMode] = useState<ViewMode>(() => {
-    // Only try to load from URL if not on a route page
-    const hash = window.location.hash;
-    if (!hash.startsWith('#route:')) {
+    // Only try to load from URL if on main app route
+    const pathname = window.location.pathname;
+    if (pathname === '/' || pathname === '') {
       const urlData = getDiagramFromUrl();
       if (urlData?.viewMode) {
         return urlData.viewMode === 'viewer' ? ViewMode.VIEWER : ViewMode.EDITOR;
@@ -112,15 +115,17 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Handle browser navigation (back/forward buttons) and hash changes
+  // Handle browser navigation (back/forward buttons) and pathname changes
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      setCurrentRoute(hash === '#route:privacy' ? 'privacy' : 'app');
+    const handlePopState = () => {
+      const pathname = window.location.pathname;
+      if (pathname === '/mermaid-guide') setCurrentRoute('guide');
+      else if (pathname === '/privacy') setCurrentRoute('privacy');
+      else setCurrentRoute('app');
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   // Sync URL with diagram data only if edited
@@ -192,18 +197,28 @@ const App: React.FC = () => {
   }, []);
 
   const navigateToPrivacy = useCallback(() => {
-    window.location.hash = '#route:privacy';
+    window.history.pushState({}, '', '/privacy');
     setCurrentRoute('privacy');
   }, []);
 
+  const navigateToGuide = useCallback(() => {
+    window.history.pushState({}, '', '/mermaid-guide');
+    setCurrentRoute('guide');
+  }, []);
+
   const navigateToApp = useCallback(() => {
-    window.location.hash = '';
+    window.history.pushState({}, '', '/');
     setCurrentRoute('app');
   }, []);
 
   // If on privacy route, show privacy page
   if (currentRoute === 'privacy') {
     return <Privacy onBack={navigateToApp} />;
+  }
+
+  // If on guide route, show guide page
+  if (currentRoute === 'guide') {
+    return <GuidePage onBack={navigateToApp} />;
   }
 
   // Otherwise, show main app
@@ -225,6 +240,7 @@ const App: React.FC = () => {
           isSaving={isSaving}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onNavigateToPrivacy={navigateToPrivacy}
+          onNavigateToGuide={navigateToGuide}
         />
       ) : (
         <Viewer 
@@ -235,6 +251,7 @@ const App: React.FC = () => {
           isEdited={isEdited}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onNavigateToPrivacy={navigateToPrivacy}
+          onNavigateToGuide={navigateToGuide}
         />
       )}
       

@@ -4,9 +4,10 @@ import { COLORS } from '../constants';
 
 interface FooterProps {
   onNavigateToPrivacy: () => void;
+  onNavigateToGuide: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy, onNavigateToGuide }) => {
   const [copied, setCopied] = useState(false);
 
   // Share the app itself, not a specific diagram
@@ -92,15 +93,26 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy }) => {
           </button>
         </div>
 
-        {/* Privacy Link */}
-        <div className="text-center">
-          <button
-            onClick={onNavigateToPrivacy}
-            className="text-xs hover:underline transition-all"
-            style={{ color: COLORS.text.muted }}
-          >
-            Privacy Policy
-          </button>
+        {/* Privacy & Guide Links */}
+        <div className="text-center space-y-1">
+          <div>
+            <button
+              onClick={onNavigateToGuide}
+              className="text-xs hover:underline transition-all"
+              style={{ color: COLORS.accent.base }}
+            >
+              Mermaid Guide
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={onNavigateToPrivacy}
+              className="text-xs hover:underline transition-all"
+              style={{ color: COLORS.text.muted }}
+            >
+              Privacy Policy
+            </button>
+          </div>
         </div>
       </div>
     </footer>
