@@ -6,10 +6,17 @@ import { Editor } from './components/Editor';
 import { Viewer } from './components/Viewer';
 import { ConsentBanner } from './components/ConsentBanner';
 import { SettingsModal } from './components/SettingsModal';
+import { Privacy } from './components/Privacy';
 import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
 import { initializeGTM, hasGTMConsent } from './utils/gtm';
 
 const App: React.FC = () => {
+  // Route state - check if we're on the privacy page
+  const [currentRoute, setCurrentRoute] = useState<string>(() => {
+    const path = window.location.pathname;
+    return path === '/privacy' ? 'privacy' : 'app';
+  });
+
   const [code, setCode] = useState<string>(() => {
     // First try to load from URL
     const urlData = getDiagramFromUrl();
@@ -92,6 +99,17 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // Handle browser navigation (back/forward buttons)
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      setCurrentRoute(path === '/privacy' ? 'privacy' : 'app');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Sync URL with diagram data only if edited
   useEffect(() => {
     if (isEdited) {
@@ -160,6 +178,22 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const navigateToPrivacy = useCallback(() => {
+    window.history.pushState({}, '', '/privacy');
+    setCurrentRoute('privacy');
+  }, []);
+
+  const navigateToApp = useCallback(() => {
+    window.history.pushState({}, '', '/');
+    setCurrentRoute('app');
+  }, []);
+
+  // If on privacy route, show privacy page
+  if (currentRoute === 'privacy') {
+    return <Privacy onBack={navigateToApp} />;
+  }
+
+  // Otherwise, show main app
   return (
     <div className="flex flex-col h-full overflow-hidden bg-slate-950">
       {/* Dynamic View Rendering */}
@@ -177,6 +211,7 @@ const App: React.FC = () => {
           setTitle={setTitle}
           isSaving={isSaving}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onNavigateToPrivacy={navigateToPrivacy}
         />
       ) : (
         <Viewer 
@@ -186,17 +221,19 @@ const App: React.FC = () => {
           setTitle={setTitle}
           isEdited={isEdited}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onNavigateToPrivacy={navigateToPrivacy}
         />
       )}
       
       {/* Consent Banner */}
-      <ConsentBanner onConsent={handleConsent} />
+      <ConsentBanner onConsent={handleConsent} onNavigateToPrivacy={navigateToPrivacy} />
       
       {/* Settings Modal */}
       <SettingsModal 
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         onConsentChange={handleConsentChange}
+        onNavigateToPrivacy={navigateToPrivacy}
       />
     </div>
   );

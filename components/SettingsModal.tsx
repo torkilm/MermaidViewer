@@ -7,12 +7,14 @@ interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConsentChange: (accepted: boolean) => void;
+  onNavigateToPrivacy: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ 
   isOpen, 
   onClose,
-  onConsentChange 
+  onConsentChange,
+  onNavigateToPrivacy
 }) => {
   const [currentConsent, setCurrentConsent] = React.useState<boolean>(hasGTMConsent());
 
@@ -151,6 +153,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 All diagrams are stored locally in your browser. 
                 No data is ever sent to our servers. 
                 Analytics help us understand usage patterns without accessing your content.
+                {' '}
+                <button
+                  onClick={() => {
+                    onClose();
+                    onNavigateToPrivacy();
+                  }}
+                  className="underline hover:opacity-80"
+                  style={{ color: COLORS.accent.base }}
+                >
+                  Read our Privacy Policy
+                </button>
               </p>
             </div>
           </div>

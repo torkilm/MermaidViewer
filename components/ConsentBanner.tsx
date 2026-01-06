@@ -4,9 +4,10 @@ import { hasRespondedToConsent, setGTMConsent } from '../utils/gtm';
 
 interface ConsentBannerProps {
   onConsent: (accepted: boolean) => void;
+  onNavigateToPrivacy: () => void;
 }
 
-export const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsent }) => {
+export const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsent, onNavigateToPrivacy }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -50,6 +51,14 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsent }) => {
             We use analytics to understand how you use Mermaid Studio and improve your experience. 
             Your diagrams remain private and are never sent to our servers. 
             You can decline analytics and still use all features.
+            {' '}
+            <button
+              onClick={onNavigateToPrivacy}
+              className="underline hover:opacity-80"
+              style={{ color: COLORS.accent.base }}
+            >
+              Learn more in our Privacy Policy
+            </button>
           </p>
         </div>
         
