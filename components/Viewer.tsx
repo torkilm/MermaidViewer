@@ -13,13 +13,14 @@ interface ViewerProps {
   setTitle: (title: string) => void;
   isEdited: boolean;
   onOpenSettings: () => void;
+  onNavigateToPrivacy: () => void;
 }
 
 const ZOOM_STEP = 0.2;
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
 
-export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, isEdited, onOpenSettings }) => {
+export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, isEdited, onOpenSettings, onNavigateToPrivacy }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [svgMarkup, setSvgMarkup] = useState<string>('');
@@ -482,7 +483,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
           </button>
         </div>
       </div>
-      <Footer />
+      <Footer onNavigateToPrivacy={onNavigateToPrivacy} />
     </div>
   );
 };

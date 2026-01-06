@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { FacebookIcon, LinkedInIcon, TwitterIcon, LinkIcon, CheckIcon } from './Icons';
 import { COLORS } from '../constants';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigateToPrivacy: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy }) => {
   const [copied, setCopied] = useState(false);
 
   // Share the app itself, not a specific diagram
@@ -36,54 +40,68 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="border-t py-4 px-6" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
-      <div className="max-w-4xl mx-auto flex items-center justify-center gap-2">
-        <span className="text-slate-400 text-sm font-medium mr-2">Share Mermaid Viewer:</span>
-        
-        <button
-          onClick={handleFacebookShare}
-          className="p-2.5 text-slate-400 hover:text-blue-500 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          title="Share Mermaid Viewer on Facebook"
-          aria-label="Share on Facebook"
-        >
-          <FacebookIcon className="w-5 h-5" />
-        </button>
+      <div className="max-w-4xl mx-auto">
+        {/* Share Section */}
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="text-slate-400 text-sm font-medium mr-2">Share Mermaid Viewer:</span>
+          
+          <button
+            onClick={handleFacebookShare}
+            className="p-2.5 text-slate-400 hover:text-blue-500 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
+            title="Share Mermaid Viewer on Facebook"
+            aria-label="Share on Facebook"
+          >
+            <FacebookIcon className="w-5 h-5" />
+          </button>
 
-        <button
-          onClick={handleLinkedInShare}
-          className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          title="Share Mermaid Viewer on LinkedIn"
-          aria-label="Share on LinkedIn"
-        >
-          <LinkedInIcon className="w-5 h-5" />
-        </button>
+          <button
+            onClick={handleLinkedInShare}
+            className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
+            title="Share Mermaid Viewer on LinkedIn"
+            aria-label="Share on LinkedIn"
+          >
+            <LinkedInIcon className="w-5 h-5" />
+          </button>
 
-        <button
-          onClick={handleTwitterShare}
-          className="p-2.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          title="Share Mermaid Viewer on Twitter"
-          aria-label="Share on Twitter"
-        >
-          <TwitterIcon className="w-5 h-5" />
-        </button>
+          <button
+            onClick={handleTwitterShare}
+            className="p-2.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
+            title="Share Mermaid Viewer on Twitter"
+            aria-label="Share on Twitter"
+          >
+            <TwitterIcon className="w-5 h-5" />
+          </button>
 
-        <div className="w-px h-6 bg-slate-800 mx-1"></div>
+          <div className="w-px h-6 bg-slate-800 mx-1"></div>
 
-        <button
-          onClick={handleCopyUrl}
-          className={`p-2.5 rounded-lg transition-all active:scale-90 ${
-            copied 
-              ? 'text-emerald-500 bg-emerald-500/10' 
-              : 'text-slate-400 hover:text-indigo-400 hover:bg-slate-800'
-          }`}
-          title="Copy app URL"
-          aria-label="Copy app URL to clipboard"
-        >
-          {copied ? (
-            <CheckIcon className="w-5 h-5" />
-          ) : (
-            <LinkIcon className="w-5 h-5" />
-          )}
-        </button>
+          <button
+            onClick={handleCopyUrl}
+            className={`p-2.5 rounded-lg transition-all active:scale-90 ${
+              copied 
+                ? 'text-emerald-500 bg-emerald-500/10' 
+                : 'text-slate-400 hover:text-indigo-400 hover:bg-slate-800'
+            }`}
+            title="Copy app URL"
+            aria-label="Copy app URL to clipboard"
+          >
+            {copied ? (
+              <CheckIcon className="w-5 h-5" />
+            ) : (
+              <LinkIcon className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {/* Privacy Link */}
+        <div className="text-center">
+          <button
+            onClick={onNavigateToPrivacy}
+            className="text-xs hover:underline transition-all"
+            style={{ color: COLORS.text.muted }}
+          >
+            Privacy Policy
+          </button>
+        </div>
       </div>
     </footer>
   );

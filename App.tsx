@@ -6,14 +6,24 @@ import { Editor } from './components/Editor';
 import { Viewer } from './components/Viewer';
 import { ConsentBanner } from './components/ConsentBanner';
 import { SettingsModal } from './components/SettingsModal';
+import { Privacy } from './components/Privacy';
 import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
 import { initializeGTM, hasGTMConsent } from './utils/gtm';
 
 const App: React.FC = () => {
+  // Route state - check if we're on the privacy page using hash with 'route:' prefix
+  const [currentRoute, setCurrentRoute] = useState<string>(() => {
+    const hash = window.location.hash;
+    return hash === '#route:privacy' ? 'privacy' : 'app';
+  });
+
   const [code, setCode] = useState<string>(() => {
-    // First try to load from URL
-    const urlData = getDiagramFromUrl();
-    if (urlData) return urlData.code;
+    // Only try to load from URL if not on a route page
+    const hash = window.location.hash;
+    if (!hash.startsWith('#route:')) {
+      const urlData = getDiagramFromUrl();
+      if (urlData) return urlData.code;
+    }
     
     // Fall back to localStorage
     const saved = localStorage.getItem('mermaid-go-code');
@@ -22,15 +32,22 @@ const App: React.FC = () => {
   
   // Track if user has edited the diagram from defaults
   const [isEdited, setIsEdited] = useState<boolean>(() => {
-    // If loading from URL hash, consider it edited (shared diagram)
-    const urlData = getDiagramFromUrl();
-    return !!urlData;
+    // If loading from URL hash (but not a route), consider it edited (shared diagram)
+    const hash = window.location.hash;
+    if (!hash.startsWith('#route:')) {
+      const urlData = getDiagramFromUrl();
+      return !!urlData;
+    }
+    return false;
   });
   
   const [title, setTitle] = useState<string>(() => {
-    // First try to load from URL
-    const urlData = getDiagramFromUrl();
-    if (urlData) return urlData.title;
+    // Only try to load from URL if not on a route page
+    const hash = window.location.hash;
+    if (!hash.startsWith('#route:')) {
+      const urlData = getDiagramFromUrl();
+      if (urlData) return urlData.title;
+    }
     
     // Fall back to localStorage
     const saved = localStorage.getItem('mermaid-go-title');
@@ -38,10 +55,13 @@ const App: React.FC = () => {
   });
 
   const [mode, setMode] = useState<ViewMode>(() => {
-    // First try to load from URL
-    const urlData = getDiagramFromUrl();
-    if (urlData?.viewMode) {
-      return urlData.viewMode === 'viewer' ? ViewMode.VIEWER : ViewMode.EDITOR;
+    // Only try to load from URL if not on a route page
+    const hash = window.location.hash;
+    if (!hash.startsWith('#route:')) {
+      const urlData = getDiagramFromUrl();
+      if (urlData?.viewMode) {
+        return urlData.viewMode === 'viewer' ? ViewMode.VIEWER : ViewMode.EDITOR;
+      }
     }
     return ViewMode.EDITOR;
   });
@@ -90,6 +110,17 @@ const App: React.FC = () => {
     if (hasGTMConsent()) {
       initializeGTM();
     }
+  }, []);
+
+  // Handle browser navigation (back/forward buttons) and hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      setCurrentRoute(hash === '#route:privacy' ? 'privacy' : 'app');
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   // Sync URL with diagram data only if edited
@@ -160,6 +191,22 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const navigateToPrivacy = useCallback(() => {
+    window.location.hash = '#route:privacy';
+    setCurrentRoute('privacy');
+  }, []);
+
+  const navigateToApp = useCallback(() => {
+    window.location.hash = '';
+    setCurrentRoute('app');
+  }, []);
+
+  // If on privacy route, show privacy page
+  if (currentRoute === 'privacy') {
+    return <Privacy onBack={navigateToApp} />;
+  }
+
+  // Otherwise, show main app
   return (
     <div className="flex flex-col h-full overflow-hidden bg-slate-950">
       {/* Dynamic View Rendering */}
@@ -177,6 +224,7 @@ const App: React.FC = () => {
           setTitle={setTitle}
           isSaving={isSaving}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onNavigateToPrivacy={navigateToPrivacy}
         />
       ) : (
         <Viewer 
@@ -186,17 +234,19 @@ const App: React.FC = () => {
           setTitle={setTitle}
           isEdited={isEdited}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onNavigateToPrivacy={navigateToPrivacy}
         />
       )}
       
       {/* Consent Banner */}
-      <ConsentBanner onConsent={handleConsent} />
+      <ConsentBanner onConsent={handleConsent} onNavigateToPrivacy={navigateToPrivacy} />
       
       {/* Settings Modal */}
       <SettingsModal 
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         onConsentChange={handleConsentChange}
+        onNavigateToPrivacy={navigateToPrivacy}
       />
     </div>
   );
