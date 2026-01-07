@@ -8,7 +8,10 @@ interface SyntaxHighlighterProps {
   inline?: boolean;
 }
 
-export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code, inline = false }) => {
+export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({
+  code,
+  inline = false,
+}) => {
   const codeRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -20,9 +23,10 @@ export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code, inli
 
   return (
     <pre
-      className={inline 
-        ? "font-mono text-[15px] leading-relaxed whitespace-pre m-0" 
-        : "absolute inset-0 p-6 font-mono text-[15px] leading-relaxed pointer-events-none whitespace-pre"
+      className={
+        inline
+          ? 'font-mono text-[15px] leading-relaxed whitespace-pre m-0'
+          : 'absolute inset-0 p-6 font-mono text-[15px] leading-relaxed pointer-events-none whitespace-pre'
       }
     >
       <code ref={codeRef} className="language-mermaid">

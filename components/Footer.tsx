@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { FacebookIcon, LinkedInIcon, TwitterIcon, LinkIcon, CheckIcon } from './Icons';
+import {
+  FacebookIcon,
+  LinkedInIcon,
+  TwitterIcon,
+  LinkIcon,
+  CheckIcon,
+} from './Icons';
 import { COLORS } from '../constants';
 
 interface FooterProps {
@@ -7,12 +13,16 @@ interface FooterProps {
   onNavigateToGuide: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy, onNavigateToGuide }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onNavigateToPrivacy,
+  onNavigateToGuide,
+}) => {
   const [copied, setCopied] = useState(false);
 
   // Share the app itself, not a specific diagram
   const appUrl = `${window.location.origin}${window.location.pathname}`;
-  const shareText = 'Check out Mermaid Viewer - Create and share beautiful diagrams!';
+  const shareText =
+    'Check out Mermaid Viewer - Create and share beautiful diagrams!';
 
   const handleCopyUrl = async () => {
     try {
@@ -40,12 +50,20 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy, onNavigateT
   };
 
   return (
-    <footer className="border-t py-4 px-6" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
+    <footer
+      className="border-t py-4 px-6"
+      style={{
+        backgroundColor: COLORS.primary.base,
+        borderColor: COLORS.border.base,
+      }}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Share Section */}
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="text-slate-400 text-sm font-medium mr-2">Share Mermaid Viewer:</span>
-          
+          <span className="text-slate-400 text-sm font-medium mr-2">
+            Share Mermaid Viewer:
+          </span>
+
           <button
             onClick={handleFacebookShare}
             className="p-2.5 text-slate-400 hover:text-blue-500 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
@@ -78,8 +96,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToPrivacy, onNavigateT
           <button
             onClick={handleCopyUrl}
             className={`p-2.5 rounded-lg transition-all active:scale-90 ${
-              copied 
-                ? 'text-emerald-500 bg-emerald-500/10' 
+              copied
+                ? 'text-emerald-500 bg-emerald-500/10'
                 : 'text-slate-400 hover:text-indigo-400 hover:bg-slate-800'
             }`}
             title="Copy app URL"
