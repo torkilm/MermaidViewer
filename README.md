@@ -69,6 +69,24 @@ Use the built-in share buttons in the footer:
 3. Run the app:
    `npm run dev`
 
+## Testing
+
+This project uses Vitest for testing. Run the test suite with:
+
+```bash
+npm test          # Run tests in watch mode
+npm run test:run  # Run tests once (CI mode)
+npm run test:ui   # Run tests with UI interface
+```
+
+The test suite includes:
+- **Export utilities** - Validates SVG sanitization and filename formatting
+- **Security checks** - Verifies Mermaid security level configuration
+- **Syntax highlighting** - Ensures proper Prism.js integration
+- **Consent banner** - Tests cookie consent logic
+
+All tests run automatically in CI before deployment.
+
 ## Deployment
 
 This app is configured to deploy to GitHub Pages automatically when changes are pushed to the `main` branch.

@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test } from 'vitest';
 
 describe('mermaidService', () => {
   test.skip('renderDiagram with valid code', async () => {

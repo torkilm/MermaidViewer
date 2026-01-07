@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from 'vitest';
+import { describe, test, expect } from 'vitest';
 import { formatExportFilename, sanitizeSvg, sanitizeSvgString } from '../utils/exportUtils';
 
 describe('exportUtils - formatExportFilename', () => {
