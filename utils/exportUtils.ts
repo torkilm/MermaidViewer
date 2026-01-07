@@ -31,7 +31,7 @@ function sanitizeSvgElement(svgElement: Element): void {
 }
 
 /**
- * Checks if a URL is unsafe (contains javascript:, data:text/html, etc.)
+ * Checks if a URL is unsafe (contains javascript:, data:, vbscript:, etc.)
  * Handles encoded variants and whitespace obfuscation
  */
 function isUnsafeUrl(url: string): boolean {
@@ -45,7 +45,7 @@ function isUnsafeUrl(url: string): boolean {
   // Check for various dangerous URL schemes
   return (
     decoded.startsWith('javascript:') ||
-    decoded.startsWith('data:text/html') ||
+    decoded.startsWith('data:') ||
     decoded.startsWith('vbscript:')
   );
 }
