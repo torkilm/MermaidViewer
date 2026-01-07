@@ -55,7 +55,7 @@ describe('SyntaxHighlighter Security', () => {
   });
 
   test('imports custom Mermaid language definition', () => {
-    expect(syntaxHighlighterContent).toContain("from '../utils/prismMermaid'");
+    expect(syntaxHighlighterContent).toContain("'../utils/prismMermaid'");
   });
 
   test('uses Prism.highlightElement instead of regex replacements', () => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Prism from 'prismjs';
-import { registerMermaidLanguage } from '../utils/prismMermaid';
+// Import to register the Mermaid language definition
+import '../utils/prismMermaid';
 
 interface SyntaxHighlighterProps {
   code: string;
@@ -9,11 +10,6 @@ interface SyntaxHighlighterProps {
 
 export const SyntaxHighlighter: React.FC<SyntaxHighlighterProps> = ({ code, inline = false }) => {
   const codeRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    // Register custom Mermaid language on mount
-    registerMermaidLanguage();
-  }, []);
 
   useEffect(() => {
     // Highlight code whenever it changes
