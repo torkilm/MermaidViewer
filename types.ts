@@ -1,7 +1,6 @@
-
 export enum ViewMode {
   EDITOR = 'EDITOR',
-  VIEWER = 'VIEWER'
+  VIEWER = 'VIEWER',
 }
 
 export interface DiagramState {

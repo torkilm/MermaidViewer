@@ -1,6 +1,6 @@
 /**
  * Tests for SyntaxHighlighter component to verify XSS vulnerability is fixed
- * 
+ *
  * These tests verify that:
  * 1. The component uses Prism.js instead of custom regex-based highlighting
  * 2. No dangerouslySetInnerHTML is used
@@ -23,27 +23,34 @@ function test(name: string, fn: () => void) {
   try {
     fn();
     console.log(`✅ ${name}`);
-  } catch (err: any) {
-    console.error(`❌ ${name}: ${err.message}`);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`❌ ${name}: ${message}`);
   }
 }
 
-function expect(actual: any) {
+function expect(actual: unknown) {
   return {
-    toBe(expected: any) {
-      if (actual !== expected) throw new Error(`Expected ${expected}, but got ${actual}`);
+    toBe(expected: unknown) {
+      if (actual !== expected)
+        throw new Error(`Expected ${expected}, but got ${actual}`);
     },
     toContain(expected: string) {
-      if (!actual.includes(expected)) throw new Error(`Expected text to contain "${expected}"`);
+      if (typeof actual !== 'string' || !actual.includes(expected))
+        throw new Error(`Expected text to contain "${expected}"`);
     },
     notToContain(expected: string) {
-      if (actual.includes(expected)) throw new Error(`Expected text NOT to contain "${expected}"`);
-    }
+      if (typeof actual === 'string' && actual.includes(expected))
+        throw new Error(`Expected text NOT to contain "${expected}"`);
+    },
   };
 }
 
 describe('SyntaxHighlighter Security', () => {
-  const syntaxHighlighterPath = join(__dirname, '../components/SyntaxHighlighter.tsx');
+  const syntaxHighlighterPath = join(
+    __dirname,
+    '../components/SyntaxHighlighter.tsx'
+  );
   const syntaxHighlighterContent = readFileSync(syntaxHighlighterPath, 'utf-8');
 
   test('does not use dangerouslySetInnerHTML', () => {
