@@ -32,6 +32,59 @@ export function sanitizeSvg(element: SVGSVGElement): string {
 }
 
 /**
+ * Sanitizes an SVG string by removing potential security risks like scripts and event handlers.
+ * This function parses the SVG string, sanitizes it, and returns the cleaned string.
+ */
+export function sanitizeSvgString(svgString: string): string {
+  // Create a temporary container to parse the SVG string
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgString, 'image/svg+xml');
+  
+  // Check for parsing errors
+  const parserError = doc.querySelector('parsererror');
+  if (parserError) {
+    console.error('SVG parsing error:', parserError.textContent);
+    return svgString; // Return original if parsing fails
+  }
+  
+  const svgElement = doc.documentElement as unknown as SVGSVGElement;
+  
+  // Remove script tags
+  const scripts = svgElement.querySelectorAll('script');
+  scripts.forEach(s => s.remove());
+
+  // Remove event handlers (on*) and javascript: URLs
+  const allElements = svgElement.querySelectorAll('*');
+  allElements.forEach(el => {
+    const attrs = el.attributes;
+    for (let i = attrs.length - 1; i >= 0; i--) {
+      const attrName = attrs[i].name.toLowerCase();
+      const attrValue = attrs[i].value;
+      
+      // Remove on* event handlers
+      if (attrName.startsWith('on')) {
+        el.removeAttribute(attrs[i].name);
+      }
+      
+      // Remove javascript: URLs in href and xlink:href
+      if ((attrName === 'href' || attrName === 'xlink:href') && 
+          attrValue && attrValue.trim().toLowerCase().startsWith('javascript:')) {
+        el.removeAttribute(attrs[i].name);
+      }
+    }
+  });
+
+  let svgData = new XMLSerializer().serializeToString(svgElement);
+  
+  // Ensure the correct namespace is present
+  if (!svgData.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+    svgData = svgData.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  
+  return svgData;
+}
+
+/**
  * Generates a standardized filename in the format: YYYYMMDD-HHMMSS-title.png
  */
 export function formatExportFilename(title: string, date: Date = new Date()): string {
