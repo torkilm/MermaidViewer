@@ -24,8 +24,8 @@ const operators = [
 const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Pre-compile regex patterns for performance
-const keywordPattern = new RegExp(`\\b(?:${keywords.map(escapeRegex).join('|')})\\b`);
-const operatorPattern = new RegExp(operators.map(escapeRegex).join('|'));
+const keywordPattern = new RegExp(`\\b(?:${keywords.map(escapeRegex).join('|')})\\b`, 'g');
+const operatorPattern = new RegExp(operators.map(escapeRegex).join('|'), 'g');
 
 export function registerMermaidLanguage(): void {
   // Only register once
@@ -35,7 +35,7 @@ export function registerMermaidLanguage(): void {
 
   Prism.languages.mermaid = {
     'comment': {
-      pattern: /%%.*$/m,
+      pattern: /%%.*$/gm,
       greedy: true
     },
     'string': {
