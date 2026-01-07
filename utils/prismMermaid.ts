@@ -10,6 +10,26 @@ export function registerMermaidLanguage(): void {
     return;
   }
 
+  // Mermaid keywords - diagram types and common directives
+  const keywords = [
+    'graph', 'flowchart', 'sequenceDiagram', 'classDiagram', 'stateDiagram', 
+    'stateDiagram-v2', 'erDiagram', 'journey', 'gantt', 'pie', 'gitGraph',
+    'TD', 'TB', 'BT', 'RL', 'LR', 'participant', 'actor', 'Note', 'loop', 
+    'alt', 'opt', 'par', 'and', 'end', 'activate', 'deactivate', 'title',
+    'section', 'class', 'state', 'note', 'dateFormat', 'axisFormat'
+  ];
+
+  // Mermaid operators and arrows
+  const operators = [
+    '-->', '---', '-.->',  '-.-', '==>', '==>>', '--', '->>', 
+    '---|', '-->|', '-.', '->', '=>', '==', ':::', '::'
+  ];
+
+  // Escape special regex characters and create pattern
+  const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const keywordPattern = keywords.map(escapeRegex).join('|');
+  const operatorPattern = operators.map(escapeRegex).join('|');
+
   Prism.languages.mermaid = {
     'comment': {
       pattern: /%%.*$/m,
@@ -20,11 +40,11 @@ export function registerMermaidLanguage(): void {
       greedy: true
     },
     'keyword': {
-      pattern: /\b(?:graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|stateDiagram-v2|erDiagram|journey|gantt|pie|gitGraph|TD|TB|BT|RL|LR|participant|actor|Note|loop|alt|opt|par|and|end|activate|deactivate|title|section|class|state|note|dateFormat|axisFormat)\b/,
+      pattern: new RegExp(`\\b(?:${keywordPattern})\\b`),
       greedy: true
     },
     'operator': {
-      pattern: /-->|---|\.->|\.-|==>|==>>|--|->|>>|---\||-->\||--|-\.|->|=>|==|:::|::/,
+      pattern: new RegExp(operatorPattern),
       greedy: true
     },
     'node-id': {
