@@ -5,7 +5,7 @@ declare module 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs
     theme?: string;
     securityLevel?: 'strict' | 'loose' | 'sandbox';
     fontFamily?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   export interface RenderResult {
