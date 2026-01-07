@@ -1,5 +1,5 @@
 
-import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+import mermaid from 'mermaid';
 
 // Initialize mermaid
 mermaid.initialize({
