@@ -1,0 +1,97 @@
+/* Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+body {
+  font-family: 'Inter', sans-serif;
+  overscroll-behavior: none;
+  /* Prevent system-level delays on taps */
+  touch-action: manipulation;
+}
+
+.font-mono {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Hide scrollbars but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Ensure the app fills the viewport on mobile including safe areas */
+#root {
+  height: 100%;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #0F172A; /* Deep Navy - primary */
+}
+
+/* Prism.js syntax highlighting styles - Custom theme matching app colors */
+.token.comment {
+  color: #64748B; /* text dark */
+  font-style: italic;
+}
+
+.token.string {
+  color: #10B981; /* Emerald - success */
+}
+
+.token.keyword {
+  color: #06B6D4; /* Cyan - accent */
+  font-weight: 600;
+}
+
+.token.operator {
+  color: #06B6D4; /* Cyan - accent */
+  font-weight: 500;
+}
+
+.token.variable,
+.token.node-id {
+  color: #F59E0B; /* Amber - warning */
+  font-weight: 500;
+}
+
+.token.label .content {
+  color: #FBBF24; /* Lighter amber */
+}
+
+.token.number {
+  color: #10B981; /* Emerald - success */
+}
+
+.token.punctuation {
+  color: #CBD5E1; /* text secondary */
+}
+
+/* Base Prism styles */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #F1F5F9; /* text primary */
+  background: none;
+  text-shadow: none;
+  font-family: 'Fira Code', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  tab-size: 4;
+  hyphens: none;
+}
