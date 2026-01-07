@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { renderDiagram } from '../services/mermaidService';
 import { BackIcon, DownloadIcon, ShareIcon, CheckIcon, MermaidGoLogo, SettingsIcon } from './Icons';
-import { sanitizeSvg, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
+import { sanitizeSvg, sanitizeSvgString, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
 import { Footer } from './Footer';
 import { COLORS } from '../constants';
 
@@ -47,7 +47,8 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
       setOffset({ x: 0, y: 0 });
       try {
         const svg = await renderDiagram('diagram-' + Date.now(), code);
-        setSvgMarkup(svg);
+        const sanitizedSvg = sanitizeSvgString(svg);
+        setSvgMarkup(sanitizedSvg);
       } catch (err: any) {
         setError(err?.message || 'Failed to render diagram. Please check your syntax.');
       } finally {
