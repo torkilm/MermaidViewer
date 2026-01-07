@@ -21,21 +21,42 @@ function sanitizeSvgElement(svgElement: Element): void {
         el.removeAttribute(attrs[i].name);
       }
       
-      // Remove javascript: URLs in href and xlink:href (including encoded variants)
+      // Remove javascript: and data: URLs in href and xlink:href (including encoded variants)
       if (attrName === 'href' || attrName === 'xlink:href') {
-        if (attrValue) {
-          // Decode HTML entities and check for javascript: protocol
-          const decoded = attrValue.replace(/&#(\d+);/g, (_, num) => String.fromCharCode(num))
-                                   .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
-                                   .trim()
-                                   .toLowerCase();
-          if (decoded.startsWith('javascript:') || decoded.startsWith('data:text/html')) {
-            el.removeAttribute(attrs[i].name);
-          }
+        if (attrValue && isUnsafeUrl(attrValue)) {
+          el.removeAttribute(attrs[i].name);
         }
       }
     }
   });
+}
+
+/**
+ * Checks if a URL is unsafe (contains javascript:, data:text/html, etc.)
+ * Handles encoded variants and whitespace obfuscation
+ */
+function isUnsafeUrl(url: string): boolean {
+  // Create a temporary element to decode all HTML entities (including named entities)
+  const txt = document.createElement('textarea');
+  txt.innerHTML = url;
+  const decoded = txt.value
+    .replace(/\s+/g, '') // Remove all whitespace (including tabs, newlines)
+    .toLowerCase();
+  
+  // Check for various dangerous URL schemes
+  return decoded.startsWith('javascript:') || 
+         decoded.startsWith('data:text/html') ||
+         decoded.startsWith('vbscript:');
+}
+
+/**
+ * Ensures the SVG has the correct xmlns attribute
+ */
+function ensureXmlNamespace(svgData: string): string {
+  if (!svgData.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+    return svgData.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  return svgData;
 }
 
 /**
@@ -47,13 +68,7 @@ export function sanitizeSvg(element: SVGSVGElement): string {
   sanitizeSvgElement(clone);
 
   let svgData = new XMLSerializer().serializeToString(clone);
-  
-  // Ensure the correct namespace is present
-  if (!svgData.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
-    svgData = svgData.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-  }
-  
-  return svgData;
+  return ensureXmlNamespace(svgData);
 }
 
 /**
@@ -68,7 +83,7 @@ export function sanitizeSvgString(svgString: string): string {
   // Check for parsing errors
   const parserError = doc.querySelector('parsererror');
   if (parserError) {
-    console.error('SVG parsing error:', parserError.textContent);
+    console.error('SVG parsing error occurred during sanitization');
     // Return empty SVG to prevent potential XSS if malformed SVG contains malicious content
     return '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
   }
@@ -78,13 +93,7 @@ export function sanitizeSvgString(svgString: string): string {
   sanitizeSvgElement(svgElement);
 
   let svgData = new XMLSerializer().serializeToString(svgElement);
-  
-  // Ensure the correct namespace is present
-  if (!svgData.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
-    svgData = svgData.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-  }
-  
-  return svgData;
+  return ensureXmlNamespace(svgData);
 }
 
 /**

@@ -169,6 +169,31 @@ describe('exportUtils - sanitizeSvgString', () => {
     expect(result).toContain('<text>Encoded</text>');
   });
 
+  test('removes javascript: URLs with named entities', () => {
+    const namedEntitySvg = '<svg><a href="java&colon;script:alert(1)"><text>Named</text></a></svg>';
+    const result = sanitizeSvgString(namedEntitySvg);
+    
+    expect(result).notToContain('javascript');
+    expect(result).notToContain('&colon;');
+    expect(result).toContain('<text>Named</text>');
+  });
+
+  test('removes javascript: URLs with whitespace obfuscation', () => {
+    const whitespaceSvg = '<svg><a href=" &#9;java&#10;script:alert(1)"><text>Whitespace</text></a></svg>';
+    const result = sanitizeSvgString(whitespaceSvg);
+    
+    expect(result).notToContain('javascript');
+    expect(result).toContain('<text>Whitespace</text>');
+  });
+
+  test('removes vbscript: URLs', () => {
+    const vbscriptSvg = '<svg><a href="vbscript:msgbox(1)"><text>VBScript</text></a></svg>';
+    const result = sanitizeSvgString(vbscriptSvg);
+    
+    expect(result).notToContain('vbscript');
+    expect(result).toContain('<text>VBScript</text>');
+  });
+
   test('removes data:text/html URLs', () => {
     const dataSvg = '<svg><a href="data:text/html,<script>alert(1)</script>"><text>Link</text></a></svg>';
     const result = sanitizeSvgString(dataSvg);
