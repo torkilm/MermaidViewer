@@ -9,7 +9,7 @@ export const initializeGTM = (): void => {
   // Initialize dataLayer
   window.dataLayer = window.dataLayer || [];
 
-  function gtag(...args: [string, ...unknown[]]) {
+  function gtag(...args: unknown[]) {
     window.dataLayer.push(args);
   }
 
