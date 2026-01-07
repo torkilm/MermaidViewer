@@ -1,6 +1,6 @@
 /**
  * Test for ConsentBanner behavior
- * 
+ *
  * This test validates that the consent banner appears correctly based on user consent status:
  * 1. First-time visitors (no consent record) should see the banner
  * 2. Users who declined consent should see the banner again on return visits
@@ -69,7 +69,8 @@ console.log(`  - Should show banner: ${test3Result}`);
 console.log(`  - ✓ PASS: Banner should NOT appear for users who accepted\n`);
 
 // Summary
-const allTestsPassed = test1Result === true && test2Result === true && test3Result === false;
+const allTestsPassed =
+  test1Result === true && test2Result === true && test3Result === false;
 console.log(`\n${'='.repeat(50)}`);
 console.log(`All tests passed: ${allTestsPassed ? '✓ YES' : '✗ NO'}`);
 console.log(`${'='.repeat(50)}`);

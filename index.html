@@ -1,50 +1,173 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  
-  <!-- Primary Meta Tags -->
-  <title>Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export</title>
-  <meta name="title" content="Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export">
-  <meta name="description" content="A mobile-first, ultra-lightweight Mermaid diagram renderer. Edit, view, and export high-resolution PNG/SVG diagrams with complete privacy - no data sent to servers. Works offline.">
-  <meta name="keywords" content="mermaid, diagram editor, mobile-first, privacy, high-resolution export, offline, flowchart, sequence diagram">
-  <meta name="author" content="Mermaid Studio">
-  <meta name="theme-color" content="#0f172a">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://mermaidstudio.io/">
-  <meta property="og:title" content="Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export">
-  <meta property="og:description" content="Create stunning Mermaid diagrams on mobile. Privacy-first design with no server uploads. Export high-resolution PNG/SVG diagrams. Works completely offline.">
-  <meta property="og:site_name" content="Mermaid Studio">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://mermaidstudio.io/">
-  <meta property="twitter:title" content="Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export">
-  <meta property="twitter:description" content="Create stunning Mermaid diagrams on mobile. Privacy-first design with no server uploads. Export high-resolution PNG/SVG diagrams. Works completely offline.">
-  
-  <!-- Accessibility & PWA -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Mermaid Studio">
-  
-  <!-- SEO - Robots -->
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mermaidstudio.io/">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-</head>
-<body class="text-slate-100" style="background-color: #0F172A;">
-  <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+
+    <!-- Primary Meta Tags -->
+    <title>
+      Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution
+      Export
+    </title>
+    <meta
+      name="title"
+      content="Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export"
+    />
+    <meta
+      name="description"
+      content="A mobile-first, ultra-lightweight Mermaid diagram renderer. Edit, view, and export high-resolution PNG/SVG diagrams with complete privacy - no data sent to servers. Works offline."
+    />
+    <meta
+      name="keywords"
+      content="mermaid, diagram editor, mobile-first, privacy, high-resolution export, offline, flowchart, sequence diagram"
+    />
+    <meta name="author" content="Mermaid Studio" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mermaidstudio.io/" />
+    <meta
+      property="og:title"
+      content="Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export"
+    />
+    <meta
+      property="og:description"
+      content="Create stunning Mermaid diagrams on mobile. Privacy-first design with no server uploads. Export high-resolution PNG/SVG diagrams. Works completely offline."
+    />
+    <meta property="og:site_name" content="Mermaid Studio" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mermaidstudio.io/" />
+    <meta
+      property="twitter:title"
+      content="Mermaid Studio - Privacy-First Mobile Diagram Editor & High-Resolution Export"
+    />
+    <meta
+      property="twitter:description"
+      content="Create stunning Mermaid diagrams on mobile. Privacy-first design with no server uploads. Export high-resolution PNG/SVG diagrams. Works completely offline."
+    />
+
+    <!-- Accessibility & PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Mermaid Studio" />
+
+    <!-- SEO - Robots -->
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://mermaidstudio.io/" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        overscroll-behavior: none;
+        /* Prevent system-level delays on taps */
+        touch-action: manipulation;
+      }
+      .font-mono {
+        font-family: 'Fira Code', monospace;
+      }
+      /* Hide scrollbars but keep functionality */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      /* Ensure the app fills the viewport on mobile including safe areas */
+      #root {
+        height: 100%;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a; /* Deep Navy - primary */
+      }
+
+      /* Prism.js syntax highlighting styles - Custom theme matching app colors */
+      .token.comment {
+        color: #64748b; /* text dark */
+        font-style: italic;
+      }
+      .token.string {
+        color: #10b981; /* Emerald - success */
+      }
+      .token.keyword {
+        color: #06b6d4; /* Cyan - accent */
+        font-weight: 600;
+      }
+      .token.operator {
+        color: #06b6d4; /* Cyan - accent */
+        font-weight: 500;
+      }
+      .token.variable,
+      .token.node-id {
+        color: #f59e0b; /* Amber - warning */
+        font-weight: 500;
+      }
+      .token.label .content {
+        color: #fbbf24; /* Lighter amber */
+      }
+      .token.number {
+        color: #10b981; /* Emerald - success */
+      }
+      .token.punctuation {
+        color: #cbd5e1; /* text secondary */
+      }
+      /* Base Prism styles */
+      code[class*='language-'],
+      pre[class*='language-'] {
+        color: #f1f5f9; /* text primary */
+        background: none;
+        text-shadow: none;
+        font-family: 'Fira Code', monospace;
+        text-align: left;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+        word-wrap: normal;
+        line-height: 1.5;
+        tab-size: 4;
+        hyphens: none;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react/": "https://esm.sh/react@^19.2.3/",
+          "react": "https://esm.sh/react@^19.2.3"
+        }
+      }
+    </script>
+  </head>
+  <body class="text-slate-100" style="background-color: #0f172a">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
