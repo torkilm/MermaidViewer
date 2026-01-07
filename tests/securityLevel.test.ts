@@ -23,8 +23,6 @@
  * - XSS attacks via HTML/JavaScript injection should be prevented
  */
 
-import { renderDiagram } from '../services/mermaidService';
-
 // Test diagrams for different types
 const TEST_DIAGRAMS = {
   flowchart: `graph TD

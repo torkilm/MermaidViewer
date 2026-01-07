@@ -2,6 +2,7 @@
 import { renderDiagram } from '../services/mermaidService';
 
 // These would typically be async tests in a real runner
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function runMermaidTests() {
   console.log(`\n--- Test Suite: mermaidService ---`);
 

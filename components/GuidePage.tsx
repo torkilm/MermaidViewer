@@ -10,6 +10,44 @@ interface CodeBlockState {
   [key: string]: boolean;
 }
 
+interface CodeBlockProps {
+  code: string;
+  blockId: string;
+  isCopied: boolean;
+  onCopy: (code: string, blockId: string) => void;
+}
+
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, blockId, isCopied, onCopy }) => {
+  return (
+    <div className="relative mb-6 rounded-lg overflow-hidden border" style={{ backgroundColor: COLORS.primary.light, borderColor: COLORS.border.base }}>
+      <button
+        type="button"
+        onClick={() => onCopy(code, blockId)}
+        className="absolute top-3 right-3 px-3 py-1.5 rounded-lg transition-all z-10 text-xs font-medium hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95"
+        style={{
+          backgroundColor: isCopied ? COLORS.success.base : COLORS.accent.base,
+          color: COLORS.text.primary,
+          boxShadow: isCopied ? 'none' : '0 2px 8px rgba(6, 182, 212, 0.3)',
+        }}
+        title={isCopied ? 'Copied!' : 'Copy code'}
+        aria-label={isCopied ? 'Code copied to clipboard' : 'Copy code to clipboard'}
+      >
+        {isCopied ? (
+          <>
+            <CheckIcon className="w-3 h-3 inline mr-1" />
+            Copied!
+          </>
+        ) : (
+          'Copy'
+        )}
+      </button>
+      <pre className="p-4 md:p-6 pr-20 md:pr-24 overflow-auto max-h-64 md:max-h-96 text-sm md:text-base font-mono leading-relaxed m-0 whitespace-pre" style={{ color: COLORS.text.primary }}>
+        {code}
+      </pre>
+    </div>
+  );
+};
+
 export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
   const [copiedBlocks, setCopiedBlocks] = useState<CodeBlockState>({});
 
@@ -23,38 +61,6 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     } catch (err) {
       console.error('Failed to copy code:', err);
     }
-  };
-
-  const CodeBlock = ({ code, blockId }: { code: string; blockId: string }) => {
-    const isCopied = copiedBlocks[blockId];
-    return (
-      <div className="relative mb-6 rounded-lg overflow-hidden border" style={{ backgroundColor: COLORS.primary.light, borderColor: COLORS.border.base }}>
-        <button
-          type="button"
-          onClick={() => handleCopyCode(code, blockId)}
-          className="absolute top-3 right-3 px-3 py-1.5 rounded-lg transition-all z-10 text-xs font-medium hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95"
-          style={{
-            backgroundColor: isCopied ? COLORS.success.base : COLORS.accent.base,
-            color: COLORS.text.primary,
-            boxShadow: isCopied ? 'none' : '0 2px 8px rgba(6, 182, 212, 0.3)',
-          }}
-          title={isCopied ? 'Copied!' : 'Copy code'}
-          aria-label={isCopied ? 'Code copied to clipboard' : 'Copy code to clipboard'}
-        >
-          {isCopied ? (
-            <>
-              <CheckIcon className="w-3 h-3 inline mr-1" />
-              Copied!
-            </>
-          ) : (
-            'Copy'
-          )}
-        </button>
-        <pre className="p-4 md:p-6 pr-20 md:pr-24 overflow-auto max-h-64 md:max-h-96 text-sm md:text-base font-mono leading-relaxed m-0 whitespace-pre" style={{ color: COLORS.text.primary }}>
-          {code}
-        </pre>
-      </div>
-    );
   };
 
   return (
@@ -135,7 +141,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
               className="mb-4 leading-relaxed"
               style={{ color: COLORS.text.secondary }}
             >
-              Flowcharts are the bread and butter of Mermaid. They're perfect for showing processes, decisions, and workflows.
+              Flowcharts are the bread and butter of Mermaid. They&apos;re perfect for showing processes, decisions, and workflows.
             </p>
 
             <h3 
@@ -146,7 +152,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
             </h3>
             <CodeBlock code={`graph TD
     A[Start Here] --> B[Learn Mermaid]
-    B --> C[Create Amazing Diagrams]`} blockId="flowchart-basic" />
+    B --> C[Create Amazing Diagrams]`} blockId="flowchart-basic" isCopied={copiedBlocks["flowchart-basic"] || false} onCopy={handleCopyCode} />
 
             <h3 
               className="text-lg md:text-xl font-semibold mb-3 mt-6"
@@ -173,7 +179,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
               </div>
             </div>
             <CodeBlock code={`graph LR
-    A[First] --> B[Second] --> C[Third]`} blockId="flowchart-direction" />
+    A[First] --> B[Second] --> C[Third]`} blockId="flowchart-direction" isCopied={copiedBlocks["flowchart-direction"] || false} onCopy={handleCopyCode} />
 
             <h3 
               className="text-xl font-semibold mb-3 mt-6"
@@ -188,7 +194,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     D{{Hexagon}}
     E{Diamond - Decision}
     F[(Database)]
-    G((Circle))`} blockId="flowchart-shapes" />
+    G((Circle))`} blockId="flowchart-shapes" isCopied={copiedBlocks["flowchart-shapes"] || false} onCopy={handleCopyCode} />
 
             <h3 
               className="text-xl font-semibold mb-3 mt-6"
@@ -205,7 +211,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     E -->|Yes| F[Create Account]
     F --> G[Send Welcome Email]
     G --> H[Redirect to Dashboard]
-    C --> H`} blockId="flowchart-example" />
+    C --> H`} blockId="flowchart-example" isCopied={copiedBlocks["flowchart-example"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Sequence Diagrams */}
@@ -237,7 +243,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     User->>System: Request data
     System->>Database: Query
     Database-->>System: Return results
-    System-->>User: Display data`} blockId="sequence-basic" />
+    System-->>User: Display data`} blockId="sequence-basic" isCopied={copiedBlocks["sequence-basic"] || false} onCopy={handleCopyCode} />
 
             <h3 
               className="text-xl font-semibold mb-3 mt-6"
@@ -257,7 +263,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     
     loop Every 5 minutes
         API->>API: Check for updates
-    end`} blockId="sequence-advanced" />
+    end`} blockId="sequence-advanced" isCopied={copiedBlocks["sequence-advanced"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Class Diagrams */}
@@ -299,7 +305,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     }
     
     Animal <|-- Dog
-    Animal <|-- Cat`} blockId="class-basic" />
+    Animal <|-- Cat`} blockId="class-basic" isCopied={copiedBlocks["class-basic"] || false} onCopy={handleCopyCode} />
 
             <h3 
               className="text-lg md:text-xl font-semibold mb-3 mt-6"
@@ -313,7 +319,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     classE o-- classF : Aggregation
     classG <-- classH : Association
     classI -- classJ : Link
-    classK <|.. classL : Realization`} blockId="class-relationships" />
+    classK <|.. classL : Realization`} blockId="class-relationships" isCopied={copiedBlocks["class-relationships"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* State Diagrams */}
@@ -337,7 +343,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     Review --> Approved : Accept
     Review --> Draft : Request changes
     Approved --> Published : Publish
-    Published --> [*]`} blockId="state-basic" />
+    Published --> [*]`} blockId="state-basic" isCopied={copiedBlocks["state-basic"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Entity Relationship */}
@@ -375,7 +381,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
         string productCode
         int quantity
         float price
-    }`} blockId="er-diagram" />
+    }`} blockId="er-diagram" isCopied={copiedBlocks["er-diagram"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Gantt Charts */}
@@ -404,7 +410,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     section Development
     Backend development :b1, 2024-01-20, 30d
     Frontend development :b2, after a2, 25d
-    Integration :b3, after b1 b2, 10d`} blockId="gantt-chart" />
+    Integration :b3, after b1 b2, 10d`} blockId="gantt-chart" isCopied={copiedBlocks["gantt-chart"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Pie Charts */}
@@ -427,7 +433,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     "Testing" : 20
     "Meetings" : 15
     "Documentation" : 12
-    "Other" : 8`} blockId="pie-chart" />
+    "Other" : 8`} blockId="pie-chart" isCopied={copiedBlocks["pie-chart"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Git Graph */}
@@ -457,7 +463,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     checkout develop
     merge feature-login
     checkout main
-    merge develop tag: "v1.0"`} blockId="git-graph" />
+    merge develop tag: "v1.0"`} blockId="git-graph" isCopied={copiedBlocks["git-graph"] || false} onCopy={handleCopyCode} />
           </section>
 
           {/* Tips & Best Practices */}
@@ -495,7 +501,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
                 <CodeBlock code={`graph LR
     A[User Login] --> B{Credentials Valid?}
     B -->|Yes| C[Dashboard]
-    B -->|No| D[Error Message]`} blockId="tip-names" />
+    B -->|No| D[Error Message]`} blockId="tip-names" isCopied={copiedBlocks["tip-names"] || false} onCopy={handleCopyCode} />
               </div>
 
               <div>
@@ -524,7 +530,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
     %% This is a comment
     A[Start] --> B[Process]
     %% Comments help explain your diagram
-    B --> C[End]`} blockId="tip-comments" />
+    B --> C[End]`} blockId="tip-comments" isCopied={copiedBlocks["tip-comments"] || false} onCopy={handleCopyCode} />
               </div>
             </div>
           </section>
@@ -575,7 +581,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
                 </h3>
                 <CodeBlock code={`graph TD
     A["Text with: special characters!"]
-    B["More (special) text"]`} blockId="pitfall-quotes" />
+    B["More (special) text"]`} blockId="pitfall-quotes" isCopied={copiedBlocks["pitfall-quotes"] || false} onCopy={handleCopyCode} />
               </div>
             </div>
           </section>

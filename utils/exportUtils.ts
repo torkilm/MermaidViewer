@@ -53,7 +53,7 @@ function isUnsafeUrl(url: string): boolean {
  * Ensures the SVG has the correct xmlns attribute
  */
 function ensureXmlNamespace(svgData: string): string {
-  if (!svgData.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+  if (!svgData.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
     return svgData.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
   }
   return svgData;
@@ -67,7 +67,7 @@ export function sanitizeSvg(element: SVGSVGElement): string {
   
   sanitizeSvgElement(clone);
 
-  let svgData = new XMLSerializer().serializeToString(clone);
+  const svgData = new XMLSerializer().serializeToString(clone);
   return ensureXmlNamespace(svgData);
 }
 
@@ -92,7 +92,7 @@ export function sanitizeSvgString(svgString: string): string {
   
   sanitizeSvgElement(svgElement);
 
-  let svgData = new XMLSerializer().serializeToString(svgElement);
+  const svgData = new XMLSerializer().serializeToString(svgElement);
   return ensureXmlNamespace(svgData);
 }
 

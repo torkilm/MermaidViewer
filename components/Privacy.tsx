@@ -149,7 +149,7 @@ export const Privacy: React.FC<PrivacyProps> = ({ onBack }) => {
               className="text-lg font-semibold mb-3"
               style={{ color: COLORS.text.primary }}
             >
-              What We DON'T Track
+              What We DON&apos;T Track
             </h3>
             <div 
               className="p-6 rounded-xl"
@@ -204,7 +204,7 @@ export const Privacy: React.FC<PrivacyProps> = ({ onBack }) => {
                 <li>You can accept or decline analytics when first using the app</li>
                 <li>Change your preference anytime in the Settings (⚙️ icon)</li>
                 <li>Your choice is saved locally in your browser</li>
-                <li>Declining analytics doesn't affect any app features</li>
+                <li>Declining analytics doesn&apos;t affect any app features</li>
               </ul>
               <p 
                 className="text-sm"

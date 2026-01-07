@@ -59,8 +59,8 @@ export function registerMermaidLanguage(): void {
       pattern: /\[([^\]]+)\]/,
       greedy: true,
       inside: {
-        'punctuation': /[\[\]]/,
-        'content': /[^\[\]]+/
+        'punctuation': /[[\]]/,
+        'content': /[^[\]]+/
       }
     },
     'number': {
