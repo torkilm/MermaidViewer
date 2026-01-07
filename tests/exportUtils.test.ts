@@ -159,4 +159,28 @@ describe('exportUtils - sanitizeSvgString', () => {
     expect(result).toContain('fill="blue"');
     expect(result).toContain('circle');
   });
+
+  test('removes encoded javascript: URLs', () => {
+    const encodedSvg = '<svg><a href="&#106;avascript:alert(1)"><text>Encoded</text></a></svg>';
+    const result = sanitizeSvgString(encodedSvg);
+    
+    expect(result).notToContain('javascript');
+    expect(result).notToContain('&#106;');
+    expect(result).toContain('<text>Encoded</text>');
+  });
+
+  test('removes data:text/html URLs', () => {
+    const dataSvg = '<svg><a href="data:text/html,<script>alert(1)</script>"><text>Link</text></a></svg>';
+    const result = sanitizeSvgString(dataSvg);
+    
+    expect(result).notToContain('data:text/html');
+    expect(result).toContain('<text>Link</text>');
+  });
+
+  test('returns empty SVG on parse error', () => {
+    const invalidSvg = 'This is not valid XML <>';
+    const result = sanitizeSvgString(invalidSvg);
+    
+    expect(result).toBe('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+  });
 });

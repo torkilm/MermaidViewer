@@ -1,25 +1,50 @@
 
 /**
+ * Helper function that performs the actual sanitization of an SVG element.
+ * Removes scripts, event handlers, and javascript: URLs.
+ */
+function sanitizeSvgElement(svgElement: Element): void {
+  // Remove script tags
+  const scripts = svgElement.querySelectorAll('script');
+  scripts.forEach(s => s.remove());
+
+  // Remove event handlers (on*) and javascript: URLs
+  const allElements = svgElement.querySelectorAll('*');
+  allElements.forEach(el => {
+    const attrs = el.attributes;
+    for (let i = attrs.length - 1; i >= 0; i--) {
+      const attrName = attrs[i].name.toLowerCase();
+      const attrValue = attrs[i].value;
+      
+      // Remove on* event handlers
+      if (attrName.startsWith('on')) {
+        el.removeAttribute(attrs[i].name);
+      }
+      
+      // Remove javascript: URLs in href and xlink:href (including encoded variants)
+      if (attrName === 'href' || attrName === 'xlink:href') {
+        if (attrValue) {
+          // Decode HTML entities and check for javascript: protocol
+          const decoded = attrValue.replace(/&#(\d+);/g, (_, num) => String.fromCharCode(num))
+                                   .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+                                   .trim()
+                                   .toLowerCase();
+          if (decoded.startsWith('javascript:') || decoded.startsWith('data:text/html')) {
+            el.removeAttribute(attrs[i].name);
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
  * Sanitizes an SVG element by removing potential security risks like scripts and event handlers.
  */
 export function sanitizeSvg(element: SVGSVGElement): string {
   const clone = element.cloneNode(true) as SVGSVGElement;
   
-  // Remove script tags
-  const scripts = clone.querySelectorAll('script');
-  scripts.forEach(s => s.remove());
-
-  // Remove event handlers (on*)
-  const allElements = clone.querySelectorAll('*');
-  allElements.forEach(el => {
-    const attrs = el.attributes;
-    for (let i = attrs.length - 1; i >= 0; i--) {
-      const attrName = attrs[i].name.toLowerCase();
-      if (attrName.startsWith('on')) {
-        el.removeAttribute(attrs[i].name);
-      }
-    }
-  });
+  sanitizeSvgElement(clone);
 
   let svgData = new XMLSerializer().serializeToString(clone);
   
@@ -44,35 +69,13 @@ export function sanitizeSvgString(svgString: string): string {
   const parserError = doc.querySelector('parsererror');
   if (parserError) {
     console.error('SVG parsing error:', parserError.textContent);
-    return svgString; // Return original if parsing fails
+    // Return empty SVG to prevent potential XSS if malformed SVG contains malicious content
+    return '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
   }
   
-  const svgElement = doc.documentElement as unknown as SVGSVGElement;
+  const svgElement = doc.documentElement;
   
-  // Remove script tags
-  const scripts = svgElement.querySelectorAll('script');
-  scripts.forEach(s => s.remove());
-
-  // Remove event handlers (on*) and javascript: URLs
-  const allElements = svgElement.querySelectorAll('*');
-  allElements.forEach(el => {
-    const attrs = el.attributes;
-    for (let i = attrs.length - 1; i >= 0; i--) {
-      const attrName = attrs[i].name.toLowerCase();
-      const attrValue = attrs[i].value;
-      
-      // Remove on* event handlers
-      if (attrName.startsWith('on')) {
-        el.removeAttribute(attrs[i].name);
-      }
-      
-      // Remove javascript: URLs in href and xlink:href
-      if ((attrName === 'href' || attrName === 'xlink:href') && 
-          attrValue && attrValue.trim().toLowerCase().startsWith('javascript:')) {
-        el.removeAttribute(attrs[i].name);
-      }
-    }
-  });
+  sanitizeSvgElement(svgElement);
 
   let svgData = new XMLSerializer().serializeToString(svgElement);
   
