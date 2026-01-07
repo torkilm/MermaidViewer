@@ -1,8 +1,11 @@
-
-import { formatExportFilename, sanitizeSvg, sanitizeSvgString } from '../utils/exportUtils';
+import {
+  formatExportFilename,
+  sanitizeSvg,
+  sanitizeSvgString,
+} from '../utils/exportUtils';
 
 /**
- * Simple test runner mock for demonstration. 
+ * Simple test runner mock for demonstration.
  * In a real environment, you'd use Vitest, Jest, or similar.
  */
 function describe(name: string, fn: () => void) {
@@ -14,22 +17,26 @@ function test(name: string, fn: () => void) {
   try {
     fn();
     console.log(`✅ ${name}`);
-  } catch (err: any) {
-    console.error(`❌ ${name}: ${err.message}`);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`❌ ${name}: ${message}`);
   }
 }
 
-function expect(actual: any) {
+function expect(actual: unknown) {
   return {
-    toBe(expected: any) {
-      if (actual !== expected) throw new Error(`Expected ${expected}, but got ${actual}`);
+    toBe(expected: unknown) {
+      if (actual !== expected)
+        throw new Error(`Expected ${expected}, but got ${actual}`);
     },
     toContain(expected: string) {
-      if (!actual.includes(expected)) throw new Error(`Expected text to contain "${expected}"`);
+      if (typeof actual !== 'string' || !actual.includes(expected))
+        throw new Error(`Expected text to contain "${expected}"`);
     },
     notToContain(expected: string) {
-      if (actual.includes(expected)) throw new Error(`Expected text NOT to contain "${expected}"`);
-    }
+      if (actual.includes(expected))
+        throw new Error(`Expected text NOT to contain "${expected}"`);
+    },
   };
 }
 
@@ -56,18 +63,24 @@ describe('exportUtils - formatExportFilename', () => {
 describe('exportUtils - sanitizeSvg', () => {
   test('removes scripts and event handlers', () => {
     // Mocking browser APIs for the test
-    const mockSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const script = document.createElementNS('http://www.w3.org/2000/svg', 'script');
+    const mockSvg = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'svg'
+    );
+    const script = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'script'
+    );
     script.textContent = 'alert("xss")';
     mockSvg.appendChild(script);
-    
+
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute('onclick', 'doSomething()');
     rect.setAttribute('fill', 'red');
     mockSvg.appendChild(rect);
 
     const result = sanitizeSvg(mockSvg);
-    
+
     expect(result).notToContain('<script>');
     expect(result).notToContain('onclick');
     expect(result).toContain('fill="red"');
@@ -77,9 +90,10 @@ describe('exportUtils - sanitizeSvg', () => {
 
 describe('exportUtils - sanitizeSvgString', () => {
   test('removes script tags from SVG string', () => {
-    const maliciousSvg = '<svg><script>alert("xss")</script><rect width="100" height="100" fill="blue"/></svg>';
+    const maliciousSvg =
+      '<svg><script>alert("xss")</script><rect width="100" height="100" fill="blue"/></svg>';
     const result = sanitizeSvgString(maliciousSvg);
-    
+
     expect(result).notToContain('<script>');
     expect(result).notToContain('alert');
     expect(result).toContain('rect');
@@ -87,18 +101,20 @@ describe('exportUtils - sanitizeSvgString', () => {
   });
 
   test('removes onclick event handlers from SVG string', () => {
-    const maliciousSvg = '<svg><rect onclick="alert(1)" width="100" height="100" fill="red"/></svg>';
+    const maliciousSvg =
+      '<svg><rect onclick="alert(1)" width="100" height="100" fill="red"/></svg>';
     const result = sanitizeSvgString(maliciousSvg);
-    
+
     expect(result).notToContain('onclick');
     expect(result).toContain('rect');
     expect(result).toContain('fill="red"');
   });
 
   test('removes multiple event handlers from SVG string', () => {
-    const maliciousSvg = '<svg><rect onload="bad()" onmouseover="evil()" onclick="xss()" fill="green"/></svg>';
+    const maliciousSvg =
+      '<svg><rect onload="bad()" onmouseover="evil()" onclick="xss()" fill="green"/></svg>';
     const result = sanitizeSvgString(maliciousSvg);
-    
+
     expect(result).notToContain('onload');
     expect(result).notToContain('onmouseover');
     expect(result).notToContain('onclick');
@@ -106,25 +122,28 @@ describe('exportUtils - sanitizeSvgString', () => {
   });
 
   test('removes javascript: URLs in href attributes', () => {
-    const maliciousSvg = '<svg><a href="javascript:alert(1)"><text>Click me</text></a></svg>';
+    const maliciousSvg =
+      '<svg><a href="javascript:alert(1)"><text>Click me</text></a></svg>';
     const result = sanitizeSvgString(maliciousSvg);
-    
+
     expect(result).notToContain('javascript:');
     expect(result).toContain('<text>Click me</text>');
   });
 
   test('removes javascript: URLs in xlink:href attributes', () => {
-    const maliciousSvg = '<svg xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="javascript:alert(1)"><text>Link</text></a></svg>';
+    const maliciousSvg =
+      '<svg xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="javascript:alert(1)"><text>Link</text></a></svg>';
     const result = sanitizeSvgString(maliciousSvg);
-    
+
     expect(result).notToContain('javascript:');
     expect(result).toContain('<text>Link</text>');
   });
 
   test('preserves legitimate href attributes', () => {
-    const legitimateSvg = '<svg><a href="https://example.com"><text>Link</text></a></svg>';
+    const legitimateSvg =
+      '<svg><a href="https://example.com"><text>Link</text></a></svg>';
     const result = sanitizeSvgString(legitimateSvg);
-    
+
     expect(result).toContain('href="https://example.com"');
     expect(result).toContain('<text>Link</text>');
   });
@@ -132,7 +151,7 @@ describe('exportUtils - sanitizeSvgString', () => {
   test('adds xmlns attribute if missing', () => {
     const svgWithoutNs = '<svg><rect width="100" height="100"/></svg>';
     const result = sanitizeSvgString(svgWithoutNs);
-    
+
     expect(result).toContain('xmlns="http://www.w3.org/2000/svg"');
   });
 
@@ -150,7 +169,7 @@ describe('exportUtils - sanitizeSvgString', () => {
       </svg>
     `;
     const result = sanitizeSvgString(complexSvg);
-    
+
     expect(result).notToContain('<script>');
     expect(result).notToContain('onclick');
     expect(result).notToContain('onmouseover');
@@ -161,43 +180,48 @@ describe('exportUtils - sanitizeSvgString', () => {
   });
 
   test('removes encoded javascript: URLs', () => {
-    const encodedSvg = '<svg><a href="&#106;avascript:alert(1)"><text>Encoded</text></a></svg>';
+    const encodedSvg =
+      '<svg><a href="&#106;avascript:alert(1)"><text>Encoded</text></a></svg>';
     const result = sanitizeSvgString(encodedSvg);
-    
+
     expect(result).notToContain('javascript');
     expect(result).notToContain('&#106;');
     expect(result).toContain('<text>Encoded</text>');
   });
 
   test('removes javascript: URLs with named entities', () => {
-    const namedEntitySvg = '<svg><a href="java&colon;script:alert(1)"><text>Named</text></a></svg>';
+    const namedEntitySvg =
+      '<svg><a href="java&colon;script:alert(1)"><text>Named</text></a></svg>';
     const result = sanitizeSvgString(namedEntitySvg);
-    
+
     expect(result).notToContain('javascript');
     expect(result).notToContain('&colon;');
     expect(result).toContain('<text>Named</text>');
   });
 
   test('removes javascript: URLs with whitespace obfuscation', () => {
-    const whitespaceSvg = '<svg><a href=" &#9;java&#10;script:alert(1)"><text>Whitespace</text></a></svg>';
+    const whitespaceSvg =
+      '<svg><a href=" &#9;java&#10;script:alert(1)"><text>Whitespace</text></a></svg>';
     const result = sanitizeSvgString(whitespaceSvg);
-    
+
     expect(result).notToContain('javascript');
     expect(result).toContain('<text>Whitespace</text>');
   });
 
   test('removes vbscript: URLs', () => {
-    const vbscriptSvg = '<svg><a href="vbscript:msgbox(1)"><text>VBScript</text></a></svg>';
+    const vbscriptSvg =
+      '<svg><a href="vbscript:msgbox(1)"><text>VBScript</text></a></svg>';
     const result = sanitizeSvgString(vbscriptSvg);
-    
+
     expect(result).notToContain('vbscript');
     expect(result).toContain('<text>VBScript</text>');
   });
 
   test('removes data:text/html URLs', () => {
-    const dataSvg = '<svg><a href="data:text/html,<script>alert(1)</script>"><text>Link</text></a></svg>';
+    const dataSvg =
+      '<svg><a href="data:text/html,<script>alert(1)</script>"><text>Link</text></a></svg>';
     const result = sanitizeSvgString(dataSvg);
-    
+
     expect(result).notToContain('data:text/html');
     expect(result).toContain('<text>Link</text>');
   });
@@ -205,7 +229,7 @@ describe('exportUtils - sanitizeSvgString', () => {
   test('returns empty SVG on parse error', () => {
     const invalidSvg = 'This is not valid XML <>';
     const result = sanitizeSvgString(invalidSvg);
-    
+
     expect(result).toBe('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
   });
 });

@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { PlayIcon, TrashIcon, UndoIcon, RedoIcon, MermaidGoLogo, SettingsIcon } from './Icons';
+import {
+  PlayIcon,
+  TrashIcon,
+  UndoIcon,
+  RedoIcon,
+  MermaidGoLogo,
+  SettingsIcon,
+} from './Icons';
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
 import { validateMermaidSyntax, SyntaxError } from '../utils/syntaxValidator';
@@ -22,12 +29,12 @@ interface EditorProps {
   onNavigateToGuide: () => void;
 }
 
-export const Editor: React.FC<EditorProps> = ({ 
-  code, 
-  onChange, 
-  onGenerate, 
-  onClear, 
-  onUndo, 
+export const Editor: React.FC<EditorProps> = ({
+  code,
+  onChange,
+  onGenerate,
+  onClear,
+  onUndo,
   onRedo,
   canUndo,
   canRedo,
@@ -36,16 +43,16 @@ export const Editor: React.FC<EditorProps> = ({
   isSaving,
   onOpenSettings,
   onNavigateToPrivacy,
-  onNavigateToGuide
+  onNavigateToGuide,
 }) => {
   const [syntaxErrors, setSyntaxErrors] = useState<SyntaxError[]>([]);
   const lineCount = useMemo(() => code.split('\n').length, [code]);
-  
+
   useEffect(() => {
     const errors = validateMermaidSyntax(code);
     setSyntaxErrors(errors);
   }, [code]);
-  
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
@@ -68,19 +75,30 @@ export const Editor: React.FC<EditorProps> = ({
   }, [onUndo, onRedo]);
 
   return (
-    <div className="flex flex-col h-full" style={{ backgroundColor: COLORS.primary.base }}>
-      <header className="flex items-center justify-between px-6 py-4 border-b shrink-0" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
+    <div
+      className="flex flex-col h-full"
+      style={{ backgroundColor: COLORS.primary.base }}
+    >
+      <header
+        className="flex items-center justify-between px-6 py-4 border-b shrink-0"
+        style={{
+          backgroundColor: COLORS.primary.base,
+          borderColor: COLORS.border.base,
+        }}
+      >
         <div className="flex items-center gap-3 shrink-0">
-          <a 
-            href="./" 
+          <a
+            href="./"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
             aria-label="Mermaid Studio Home"
           >
             <MermaidGoLogo className="w-8 h-8" />
-            <span className="text-lg font-bold text-white hidden sm:inline">Mermaid Studio</span>
+            <span className="text-lg font-bold text-white hidden sm:inline">
+              Mermaid Studio
+            </span>
           </a>
         </div>
-        
+
         <div className="flex flex-col flex-1 min-w-0 px-4">
           <input
             type="text"
@@ -90,25 +108,47 @@ export const Editor: React.FC<EditorProps> = ({
             placeholder="Untitled Diagram"
           />
           <div className="flex items-center gap-1.5 mt-1">
-            <span className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'animate-pulse' : ''}`} style={{ color: isSaving ? COLORS.accent.base : COLORS.text.dark }}>
+            <span
+              className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'animate-pulse' : ''}`}
+              style={{
+                color: isSaving ? COLORS.accent.base : COLORS.text.dark,
+              }}
+            >
               {isSaving ? 'Saving...' : 'Saved locally'}
             </span>
             {!isSaving && (
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3" style={{ color: COLORS.success.base }}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="3"
+                style={{ color: COLORS.success.base }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             )}
             {syntaxErrors.length > 0 && (
               <>
-                <span className="mx-1" style={{ color: COLORS.text.dark }}>•</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: COLORS.error.base }}>
-                  {syntaxErrors.length} {syntaxErrors.length === 1 ? 'Error' : 'Errors'}
+                <span className="mx-1" style={{ color: COLORS.text.dark }}>
+                  •
+                </span>
+                <span
+                  className="text-[10px] font-bold uppercase tracking-widest"
+                  style={{ color: COLORS.error.base }}
+                >
+                  {syntaxErrors.length}{' '}
+                  {syntaxErrors.length === 1 ? 'Error' : 'Errors'}
                 </span>
               </>
             )}
           </div>
         </div>
-        
+
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onUndo}
@@ -151,12 +191,24 @@ export const Editor: React.FC<EditorProps> = ({
       </header>
 
       <main className="flex-1 p-4 flex flex-col gap-4 overflow-hidden">
-        <div className="flex-1 relative rounded-2xl border overflow-hidden shadow-inner group" style={{ backgroundColor: COLORS.primary.light, borderColor: COLORS.border.base }}>
+        <div
+          className="flex-1 relative rounded-2xl border overflow-hidden shadow-inner group"
+          style={{
+            backgroundColor: COLORS.primary.light,
+            borderColor: COLORS.border.base,
+          }}
+        >
           <div className="absolute top-3 right-4 z-10 opacity-40 text-xs font-mono uppercase tracking-widest pointer-events-none group-focus-within:opacity-100 transition-opacity">
             Mermaid Editor
           </div>
           <div className="relative w-full h-full flex">
-            <div className="shrink-0 py-6 pl-4 pr-2 border-r select-none pointer-events-none overflow-hidden" style={{ backgroundColor: 'rgba(15, 23, 42, 0.5)', borderColor: COLORS.border.base }}>
+            <div
+              className="shrink-0 py-6 pl-4 pr-2 border-r select-none pointer-events-none overflow-hidden"
+              style={{
+                backgroundColor: 'rgba(15, 23, 42, 0.5)',
+                borderColor: COLORS.border.base,
+              }}
+            >
               {Array.from({ length: lineCount }, (_, index) => (
                 <div
                   key={index}
@@ -167,7 +219,10 @@ export const Editor: React.FC<EditorProps> = ({
                 </div>
               ))}
             </div>
-            <div className="flex-1 relative overflow-auto" style={{ minHeight: '100%' }}>
+            <div
+              className="flex-1 relative overflow-auto"
+              style={{ minHeight: '100%' }}
+            >
               <div className="relative min-w-max" style={{ minHeight: '100%' }}>
                 <SyntaxHighlighter code={code} />
                 <textarea
@@ -191,13 +246,19 @@ export const Editor: React.FC<EditorProps> = ({
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 space-y-2 max-h-32 overflow-y-auto">
             {syntaxErrors.map((error, idx) => (
               <div key={idx} className="flex items-start gap-2 text-sm">
-                <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
-                  error.severity === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
-                }`}>
+                <div
+                  className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
+                    error.severity === 'error'
+                      ? 'bg-red-500/20 text-red-400'
+                      : 'bg-yellow-500/20 text-yellow-400'
+                  }`}
+                >
                   {error.severity === 'error' ? '✕' : '⚠'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-red-300 font-medium">Line {error.line}:</span>{' '}
+                  <span className="text-red-300 font-medium">
+                    Line {error.line}:
+                  </span>{' '}
                   <span className="text-red-200/80">{error.message}</span>
                 </div>
               </div>
@@ -206,19 +267,35 @@ export const Editor: React.FC<EditorProps> = ({
         )}
       </main>
 
-      <div className="p-4 pb-8 backdrop-blur-md border-t shrink-0" style={{ backgroundColor: 'rgba(15, 23, 42, 0.8)', borderColor: COLORS.border.base }}>
+      <div
+        className="p-4 pb-8 backdrop-blur-md border-t shrink-0"
+        style={{
+          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+          borderColor: COLORS.border.base,
+        }}
+      >
         <button
           onClick={onGenerate}
           className="w-full h-[56px] flex items-center justify-center gap-3 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98]"
-          style={{ backgroundColor: COLORS.accent.base, color: COLORS.text.primary }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.accent.hover}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.accent.base}
+          style={{
+            backgroundColor: COLORS.accent.base,
+            color: COLORS.text.primary,
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = COLORS.accent.hover)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = COLORS.accent.base)
+          }
         >
           <PlayIcon className="w-6 h-6" />
           <span className="text-lg">Generate Diagram</span>
         </button>
       </div>
-      <Footer onNavigateToPrivacy={onNavigateToPrivacy} onNavigateToGuide={onNavigateToGuide} />
+      <Footer
+        onNavigateToPrivacy={onNavigateToPrivacy}
+        onNavigateToGuide={onNavigateToGuide}
+      />
     </div>
   );
 };

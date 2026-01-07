@@ -6,7 +6,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'prettier'
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -17,6 +17,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/set-state-in-effect': 'off'
-  }
+    'react-hooks/set-state-in-effect': 'off',
+  },
 };

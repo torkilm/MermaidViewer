@@ -7,24 +7,70 @@ import Prism from 'prismjs';
 
 // Mermaid keywords - diagram types and common directives
 const keywords = [
-  'graph', 'flowchart', 'sequenceDiagram', 'classDiagram', 'stateDiagram', 
-  'stateDiagram-v2', 'erDiagram', 'journey', 'gantt', 'pie', 'gitGraph',
-  'TD', 'TB', 'BT', 'RL', 'LR', 'participant', 'actor', 'Note', 'loop', 
-  'alt', 'opt', 'par', 'and', 'end', 'activate', 'deactivate', 'title',
-  'section', 'class', 'state', 'note', 'dateFormat', 'axisFormat'
+  'graph',
+  'flowchart',
+  'sequenceDiagram',
+  'classDiagram',
+  'stateDiagram',
+  'stateDiagram-v2',
+  'erDiagram',
+  'journey',
+  'gantt',
+  'pie',
+  'gitGraph',
+  'TD',
+  'TB',
+  'BT',
+  'RL',
+  'LR',
+  'participant',
+  'actor',
+  'Note',
+  'loop',
+  'alt',
+  'opt',
+  'par',
+  'and',
+  'end',
+  'activate',
+  'deactivate',
+  'title',
+  'section',
+  'class',
+  'state',
+  'note',
+  'dateFormat',
+  'axisFormat',
 ];
 
 // Mermaid operators and arrows
 const operators = [
-  '-->', '---', '-.->',  '-.-', '==>', '==>>', '--', '->>', 
-  '---|', '-->|', '-.', '->', '=>', '==', ':::', '::'
+  '-->',
+  '---',
+  '-.->',
+  '-.-',
+  '==>',
+  '==>>',
+  '--',
+  '->>',
+  '---|',
+  '-->|',
+  '-.',
+  '->',
+  '=>',
+  '==',
+  ':::',
+  '::',
 ];
 
 // Escape special regex characters
 const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Pre-compile regex patterns for performance
-const keywordPattern = new RegExp(`\\b(?:${keywords.map(escapeRegex).join('|')})\\b`, 'g');
+const keywordPattern = new RegExp(
+  `\\b(?:${keywords.map(escapeRegex).join('|')})\\b`,
+  'g'
+);
 const operatorPattern = new RegExp(operators.map(escapeRegex).join('|'), 'g');
 
 export function registerMermaidLanguage(): void {
@@ -34,40 +80,40 @@ export function registerMermaidLanguage(): void {
   }
 
   Prism.languages.mermaid = {
-    'comment': {
+    comment: {
       pattern: /%%.*$/gm,
-      greedy: true
+      greedy: true,
     },
-    'string': {
+    string: {
       pattern: /"(?:[^"\\]|\\.)*"/,
-      greedy: true
+      greedy: true,
     },
-    'keyword': {
+    keyword: {
       pattern: keywordPattern,
-      greedy: true
+      greedy: true,
     },
-    'operator': {
+    operator: {
       pattern: operatorPattern,
-      greedy: true
+      greedy: true,
     },
     'node-id': {
       pattern: /\b[A-Za-z_][A-Za-z0-9_]*(?=\[)/,
       greedy: true,
-      alias: 'variable'
+      alias: 'variable',
     },
-    'label': {
+    label: {
       pattern: /\[([^\]]+)\]/,
       greedy: true,
       inside: {
-        'punctuation': /[[\]]/,
-        'content': /[^[\]]+/
-      }
+        punctuation: /[[\]]/,
+        content: /[^[\]]+/,
+      },
     },
-    'number': {
+    number: {
       pattern: /\b\d+\b/,
-      greedy: true
+      greedy: true,
     },
-    'punctuation': /[{}[\]();,.:]/
+    punctuation: /[{}[\]();,.:]/,
   };
 }
 

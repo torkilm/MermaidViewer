@@ -1,8 +1,19 @@
-
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { renderDiagram } from '../services/mermaidService';
-import { BackIcon, DownloadIcon, ShareIcon, CheckIcon, MermaidGoLogo, SettingsIcon } from './Icons';
-import { sanitizeSvg, sanitizeSvgString, formatExportFilename, getShareableUrl } from '../utils/exportUtils';
+import {
+  BackIcon,
+  DownloadIcon,
+  ShareIcon,
+  CheckIcon,
+  MermaidGoLogo,
+  SettingsIcon,
+} from './Icons';
+import {
+  sanitizeSvg,
+  sanitizeSvgString,
+  formatExportFilename,
+  getShareableUrl,
+} from '../utils/exportUtils';
 import { Footer } from './Footer';
 import { COLORS } from '../constants';
 
@@ -21,14 +32,23 @@ const ZOOM_STEP = 0.2;
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
 
-export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, isEdited, onOpenSettings, onNavigateToPrivacy, onNavigateToGuide }) => {
+export const Viewer: React.FC<ViewerProps> = ({
+  code,
+  onBack,
+  title,
+  setTitle,
+  isEdited,
+  onOpenSettings,
+  onNavigateToPrivacy,
+  onNavigateToGuide,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [svgMarkup, setSvgMarkup] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
-  
+
   // Transform states
   const [scale, setScale] = useState<number>(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -49,8 +69,12 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
         const svg = await renderDiagram('diagram-' + Date.now(), code);
         const sanitizedSvg = sanitizeSvgString(svg);
         setSvgMarkup(sanitizedSvg);
-      } catch (err: any) {
-        setError(err?.message || 'Failed to render diagram. Please check your syntax.');
+      } catch (err: unknown) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Failed to render diagram. Please check your syntax.';
+        setError(message);
       } finally {
         setIsLoading(false);
       }
@@ -59,13 +83,14 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
     render();
   }, [code]);
 
-  const handleZoomIn = () => setScale(s => Math.min(s + ZOOM_STEP, MAX_ZOOM));
-  const handleZoomOut = () => setScale(s => Math.max(s - ZOOM_STEP, MIN_ZOOM));
+  const handleZoomIn = () => setScale((s) => Math.min(s + ZOOM_STEP, MAX_ZOOM));
+  const handleZoomOut = () =>
+    setScale((s) => Math.max(s - ZOOM_STEP, MIN_ZOOM));
   const handleResetZoom = () => {
     setScale(1);
     setOffset({ x: 0, y: 0 });
   };
-  
+
   const handleCenter = () => {
     setScale(1);
     setOffset({ x: 0, y: 0 });
@@ -75,7 +100,10 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore if user is typing in an input field
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
         return;
       }
 
@@ -98,19 +126,19 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
           break;
         case 'ArrowUp':
           e.preventDefault();
-          setOffset(prev => ({ x: prev.x, y: prev.y + PAN_AMOUNT }));
+          setOffset((prev) => ({ x: prev.x, y: prev.y + PAN_AMOUNT }));
           break;
         case 'ArrowDown':
           e.preventDefault();
-          setOffset(prev => ({ x: prev.x, y: prev.y - PAN_AMOUNT }));
+          setOffset((prev) => ({ x: prev.x, y: prev.y - PAN_AMOUNT }));
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          setOffset(prev => ({ x: prev.x + PAN_AMOUNT, y: prev.y }));
+          setOffset((prev) => ({ x: prev.x + PAN_AMOUNT, y: prev.y }));
           break;
         case 'ArrowRight':
           e.preventDefault();
-          setOffset(prev => ({ x: prev.x - PAN_AMOUNT, y: prev.y }));
+          setOffset((prev) => ({ x: prev.x - PAN_AMOUNT, y: prev.y }));
           break;
       }
     };
@@ -128,9 +156,9 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       isPanningRef.current = true;
-      lastTouchRef.current = { 
-        x: e.touches[0].clientX, 
-        y: e.touches[0].clientY 
+      lastTouchRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
       };
       initialDistanceRef.current = null;
     } else if (e.touches.length === 2) {
@@ -148,12 +176,12 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
       const currentY = e.touches[0].clientY;
       const deltaX = currentX - lastTouchRef.current.x;
       const deltaY = currentY - lastTouchRef.current.y;
-      
-      setOffset(prev => ({
+
+      setOffset((prev) => ({
         x: prev.x + deltaX,
-        y: prev.y + deltaY
+        y: prev.y + deltaY,
       }));
-      
+
       lastTouchRef.current = { x: currentX, y: currentY };
     } else if (e.touches.length === 2 && initialDistanceRef.current !== null) {
       const currentDistance = getDistance(e.touches);
@@ -172,24 +200,24 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return; // Only handle left click
     isPanningRef.current = true;
-    lastTouchRef.current = { 
-      x: e.clientX, 
-      y: e.clientY 
+    lastTouchRef.current = {
+      x: e.clientX,
+      y: e.clientY,
     };
     e.preventDefault();
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isPanningRef.current) return;
-    
+
     const deltaX = e.clientX - lastTouchRef.current.x;
     const deltaY = e.clientY - lastTouchRef.current.y;
-    
-    setOffset(prev => ({
+
+    setOffset((prev) => ({
       x: prev.x + deltaX,
-      y: prev.y + deltaY
+      y: prev.y + deltaY,
     }));
-    
+
     lastTouchRef.current = { x: e.clientX, y: e.clientY };
   };
 
@@ -204,11 +232,11 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
   // Mouse wheel for zooming
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    
+
     const zoomIntensity = 0.001;
     const delta = -e.deltaY * zoomIntensity;
     const newScale = Math.min(Math.max(scale + delta, MIN_ZOOM), MAX_ZOOM);
-    
+
     if (newScale !== scale) {
       setScale(newScale);
     }
@@ -216,7 +244,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
 
   const handleShare = async () => {
     try {
-      const url = isEdited 
+      const url = isEdited
         ? getShareableUrl(code, title, 'viewer')
         : 'https://mermaidstudio.io';
       await navigator.clipboard.writeText(url);
@@ -234,20 +262,20 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
     if (!originalSvg) return;
 
     const svgData = sanitizeSvg(originalSvg);
-    
-    const exportScale = 5; 
+
+    const exportScale = 5;
     const bbox = originalSvg.getBBox();
     const width = bbox.width;
     const height = bbox.height;
-    
+
     const titlePadding = 80;
-    const finalWidth = Math.max(width + 40, 400); 
+    const finalWidth = Math.max(width + 40, 400);
     const finalHeight = height + titlePadding + 40;
 
     const canvas = document.createElement('canvas');
     canvas.width = finalWidth * exportScale;
     canvas.height = finalHeight * exportScale;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -261,19 +289,19 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
     ctx.fillText(title || 'Diagram', finalWidth / 2, 50);
 
     const img = new Image();
-    img.crossOrigin = "anonymous";
-    
+    img.crossOrigin = 'anonymous';
+
     const encodedData = window.btoa(unescape(encodeURIComponent(svgData)));
     const dataUrl = 'data:image/svg+xml;charset=utf-8;base64,' + encodedData;
 
     img.onload = () => {
       const xOffset = (finalWidth - width) / 2;
       ctx.drawImage(img, xOffset, titlePadding, width, height);
-      
+
       try {
         const pngUrl = canvas.toDataURL('image/png');
         const fileName = formatExportFilename(title);
-        
+
         const downloadLink = document.createElement('a');
         downloadLink.href = pngUrl;
         downloadLink.download = fileName;
@@ -281,14 +309,14 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
         downloadLink.click();
         document.body.removeChild(downloadLink);
       } catch (err) {
-        console.error("Export failed:", err);
-        alert("Could not export PNG. Security restriction or size limit.");
+        console.error('Export failed:', err);
+        alert('Could not export PNG. Security restriction or size limit.');
       }
     };
 
     img.onerror = () => {
-      console.error("Failed to load SVG into Image for export");
-      alert("Export failed: SVG data could not be processed.");
+      console.error('Failed to load SVG into Image for export');
+      alert('Export failed: SVG data could not be processed.');
     };
 
     img.src = dataUrl;
@@ -303,40 +331,51 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
     const svgData = sanitizeSvg(originalSvg);
     const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    
+
     const fileName = formatExportFilename(title).replace('.png', '.svg');
-    
+
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
     downloadLink.download = fileName;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-    
+
     URL.revokeObjectURL(url);
   }, [title]);
 
   return (
-    <div className="flex flex-col h-full" style={{ backgroundColor: COLORS.primary.base }}>
-      <header className="flex items-center justify-between px-6 py-4 border-b shrink-0 z-20" style={{ backgroundColor: COLORS.primary.base, borderColor: COLORS.border.base }}>
+    <div
+      className="flex flex-col h-full"
+      style={{ backgroundColor: COLORS.primary.base }}
+    >
+      <header
+        className="flex items-center justify-between px-6 py-4 border-b shrink-0 z-20"
+        style={{
+          backgroundColor: COLORS.primary.base,
+          borderColor: COLORS.border.base,
+        }}
+      >
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={onBack}
             className="p-2 -ml-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-all active:scale-90"
             aria-label="Back to Editor"
           >
             <BackIcon className="w-6 h-6" />
           </button>
-          <a 
-            href="./" 
+          <a
+            href="./"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95"
             aria-label="Mermaid Studio Home"
           >
             <MermaidGoLogo className="w-7 h-7" />
-            <span className="text-base font-bold text-white hidden sm:inline">Mermaid Studio</span>
+            <span className="text-base font-bold text-white hidden sm:inline">
+              Mermaid Studio
+            </span>
           </a>
         </div>
-        
+
         <div className="flex-1 flex justify-center px-2">
           <input
             type="text"
@@ -347,7 +386,7 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
             aria-label="Rename diagram"
           />
         </div>
-        
+
         <button
           onClick={onOpenSettings}
           className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all active:scale-90"
@@ -360,37 +399,92 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
 
       <main className="flex-1 relative overflow-hidden flex flex-col items-center justify-center">
         <div className="absolute inset-0 pointer-events-none opacity-10">
-          <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }}
+          ></div>
         </div>
 
         {isLoading ? (
           <div className="flex flex-col items-center gap-4 z-10">
-            <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: COLORS.accent.base, borderTopColor: 'transparent' }}></div>
-            <p className="font-medium" style={{ color: COLORS.accent.base }}>Rendering...</p>
+            <div
+              className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin"
+              style={{
+                borderColor: COLORS.accent.base,
+                borderTopColor: 'transparent',
+              }}
+            ></div>
+            <p className="font-medium" style={{ color: COLORS.accent.base }}>
+              Rendering...
+            </p>
           </div>
         ) : error ? (
-          <div className="border rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.5)', padding: '2rem' }}>
-            <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: COLORS.error.base }}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          <div
+            className="border rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm"
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              borderColor: 'rgba(239, 68, 68, 0.5)',
+              padding: '2rem',
+            }}
+          >
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+              style={{
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                color: COLORS.error.base,
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                />
               </svg>
             </div>
-            <h3 className="font-bold text-lg mb-2" style={{ color: COLORS.error.light }}>Rendering Error</h3>
-            <p className="text-sm leading-relaxed mb-6 font-mono break-words" style={{ color: COLORS.text.secondary }}>
+            <h3
+              className="font-bold text-lg mb-2"
+              style={{ color: COLORS.error.light }}
+            >
+              Rendering Error
+            </h3>
+            <p
+              className="text-sm leading-relaxed mb-6 font-mono break-words"
+              style={{ color: COLORS.text.secondary }}
+            >
               {error}
             </p>
-            <button 
+            <button
               onClick={onBack}
               className="w-full py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all active:scale-95"
-              style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: COLORS.text.primary }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.3)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
+              style={{
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                color: COLORS.text.primary,
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  'rgba(239, 68, 68, 0.3)')
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  'rgba(239, 68, 68, 0.2)')
+              }
             >
               Back to Editor
             </button>
           </div>
         ) : (
-          <div 
+          <div
             ref={scrollContainerRef}
             className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing touch-none"
             onTouchStart={handleTouchStart}
@@ -402,13 +496,15 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
             onMouseLeave={handleMouseLeave}
             onWheel={handleWheel}
           >
-            <div 
+            <div
               ref={containerRef}
               className="min-w-full min-h-full flex items-center justify-center p-12 pointer-events-none"
-              style={{ 
+              style={{
                 transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
                 transformOrigin: 'center center',
-                transition: isPanningRef.current ? 'none' : 'transform 0.1s ease-out'
+                transition: isPanningRef.current
+                  ? 'none'
+                  : 'transform 0.1s ease-out',
               }}
               dangerouslySetInnerHTML={{ __html: svgMarkup }}
             />
@@ -416,76 +512,190 @@ export const Viewer: React.FC<ViewerProps> = ({ code, onBack, title, setTitle, i
         )}
 
         {!isLoading && !error && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 backdrop-blur-md p-1.5 rounded-2xl border shadow-2xl z-20" style={{ backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: COLORS.border.base }}>
-            <button onClick={handleZoomIn} aria-label="Zoom In" className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+          <div
+            className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 backdrop-blur-md p-1.5 rounded-2xl border shadow-2xl z-20"
+            style={{
+              backgroundColor: 'rgba(30, 41, 59, 0.8)',
+              borderColor: COLORS.border.base,
+            }}
+          >
+            <button
+              onClick={handleZoomIn}
+              aria-label="Zoom In"
+              className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
             </button>
-            <button onClick={handleResetZoom} aria-label="Reset Zoom" className="w-12 h-12 flex flex-col items-center justify-center text-xs font-bold text-slate-400 hover:bg-slate-700 rounded-xl transition-colors active:text-indigo-400">
+            <button
+              onClick={handleResetZoom}
+              aria-label="Reset Zoom"
+              className="w-12 h-12 flex flex-col items-center justify-center text-xs font-bold text-slate-400 hover:bg-slate-700 rounded-xl transition-colors active:text-indigo-400"
+            >
               <span>{Math.round(scale * 100)}%</span>
               <span className="text-[8px] uppercase">Reset</span>
             </button>
-            <button onClick={handleZoomOut} aria-label="Zoom Out" className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" /></svg>
+            <button
+              onClick={handleZoomOut}
+              aria-label="Zoom Out"
+              className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 12h-15"
+                />
+              </svg>
             </button>
-            
+
             <div className="w-10 h-px bg-slate-700 mx-auto my-1"></div>
-            
-            <button onClick={handleCenter} aria-label="Center View" title="Center diagram" className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5m-4.5 0v4.5m0-4.5l5.25 5.25" />
+
+            <button
+              onClick={handleCenter}
+              aria-label="Center View"
+              title="Center diagram"
+              className="w-12 h-12 flex items-center justify-center text-slate-200 hover:bg-slate-700 rounded-xl transition-colors active:bg-indigo-600 active:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5m-4.5 0v4.5m0-4.5l5.25 5.25"
+                />
               </svg>
             </button>
           </div>
         )}
       </main>
 
-      <div className="p-4 pb-8 backdrop-blur-md border-t shrink-0 z-20" style={{ backgroundColor: 'rgba(15, 23, 42, 0.8)', borderColor: COLORS.border.base }}>
+      <div
+        className="p-4 pb-8 backdrop-blur-md border-t shrink-0 z-20"
+        style={{
+          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+          borderColor: COLORS.border.base,
+        }}
+      >
         <div className="flex gap-3 max-w-3xl mx-auto">
-          <button 
-            onClick={onBack} 
+          <button
+            onClick={onBack}
             className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl transition-all active:scale-[0.98]"
-            style={{ backgroundColor: COLORS.primary.lighter, color: COLORS.text.secondary }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.border.light}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.primary.lighter}
+            style={{
+              backgroundColor: COLORS.primary.lighter,
+              color: COLORS.text.secondary,
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = COLORS.border.light)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = COLORS.primary.lighter)
+            }
           >
             <span>Back</span>
           </button>
-          <button 
-            onClick={handleShare} 
-            disabled={!!error || isLoading} 
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none" 
-            style={{ backgroundColor: copied ? COLORS.success.base : COLORS.accent.base, color: COLORS.text.primary }}
-            onMouseEnter={(e) => !copied && !error && !isLoading && (e.currentTarget.style.backgroundColor = COLORS.accent.hover)}
-            onMouseLeave={(e) => !copied && (e.currentTarget.style.backgroundColor = COLORS.accent.base)}
+          <button
+            onClick={handleShare}
+            disabled={!!error || isLoading}
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+            style={{
+              backgroundColor: copied
+                ? COLORS.success.base
+                : COLORS.accent.base,
+              color: COLORS.text.primary,
+            }}
+            onMouseEnter={(e) =>
+              !copied &&
+              !error &&
+              !isLoading &&
+              (e.currentTarget.style.backgroundColor = COLORS.accent.hover)
+            }
+            onMouseLeave={(e) =>
+              !copied &&
+              (e.currentTarget.style.backgroundColor = COLORS.accent.base)
+            }
           >
-            {copied ? <CheckIcon className="w-5 h-5" /> : <ShareIcon className="w-5 h-5" />}
+            {copied ? (
+              <CheckIcon className="w-5 h-5" />
+            ) : (
+              <ShareIcon className="w-5 h-5" />
+            )}
             <span className="text-base">{copied ? 'Copied!' : 'Share'}</span>
           </button>
-          <button 
-            onClick={downloadSvg} 
-            disabled={!!error || isLoading} 
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none" 
-            style={{ backgroundColor: COLORS.success.base, color: COLORS.text.primary }}
-            onMouseEnter={(e) => !error && !isLoading && (e.currentTarget.style.backgroundColor = COLORS.success.hover)}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.success.base}
+          <button
+            onClick={downloadSvg}
+            disabled={!!error || isLoading}
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+            style={{
+              backgroundColor: COLORS.success.base,
+              color: COLORS.text.primary,
+            }}
+            onMouseEnter={(e) =>
+              !error &&
+              !isLoading &&
+              (e.currentTarget.style.backgroundColor = COLORS.success.hover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = COLORS.success.base)
+            }
           >
             <DownloadIcon className="w-5 h-5" />
             <span className="text-base">SVG</span>
           </button>
-          <button 
-            onClick={downloadPng} 
-            disabled={!!error || isLoading} 
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none" 
-            style={{ backgroundColor: COLORS.warning.base, color: COLORS.text.primary }}
-            onMouseEnter={(e) => !error && !isLoading && (e.currentTarget.style.backgroundColor = COLORS.warning.hover)}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.warning.base}
+          <button
+            onClick={downloadPng}
+            disabled={!!error || isLoading}
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+            style={{
+              backgroundColor: COLORS.warning.base,
+              color: COLORS.text.primary,
+            }}
+            onMouseEnter={(e) =>
+              !error &&
+              !isLoading &&
+              (e.currentTarget.style.backgroundColor = COLORS.warning.hover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = COLORS.warning.base)
+            }
           >
             <DownloadIcon className="w-5 h-5" />
             <span className="text-base">PNG</span>
           </button>
         </div>
       </div>
-      <Footer onNavigateToPrivacy={onNavigateToPrivacy} onNavigateToGuide={onNavigateToGuide} />
+      <Footer
+        onNavigateToPrivacy={onNavigateToPrivacy}
+        onNavigateToGuide={onNavigateToGuide}
+      />
     </div>
   );
 };
