@@ -76,31 +76,51 @@
       background-color: #0F172A; /* Deep Navy - primary */
     }
     
-    /* Syntax highlighting styles */
-    .syntax-keyword {
-      color: #06B6D4; /* Cyan - accent */
-      font-weight: 600;
-    }
-    .syntax-string {
-      color: #10B981; /* Emerald - success */
-    }
-    .syntax-comment {
+    /* Prism.js syntax highlighting styles - Custom theme matching app colors */
+    .token.comment {
       color: #64748B; /* text dark */
       font-style: italic;
     }
-    .syntax-operator {
+    .token.string {
+      color: #10B981; /* Emerald - success */
+    }
+    .token.keyword {
+      color: #06B6D4; /* Cyan - accent */
+      font-weight: 600;
+    }
+    .token.operator {
       color: #06B6D4; /* Cyan - accent */
       font-weight: 500;
     }
-    .syntax-node {
+    .token.variable,
+    .token.node-id {
       color: #F59E0B; /* Amber - warning */
       font-weight: 500;
     }
-    .syntax-label {
+    .token.label .content {
       color: #FBBF24; /* Lighter amber */
     }
-    .syntax-number {
+    .token.number {
       color: #10B981; /* Emerald - success */
+    }
+    .token.punctuation {
+      color: #CBD5E1; /* text secondary */
+    }
+    /* Base Prism styles */
+    code[class*="language-"],
+    pre[class*="language-"] {
+      color: #F1F5F9; /* text primary */
+      background: none;
+      text-shadow: none;
+      font-family: 'Fira Code', monospace;
+      text-align: left;
+      white-space: pre;
+      word-spacing: normal;
+      word-break: normal;
+      word-wrap: normal;
+      line-height: 1.5;
+      tab-size: 4;
+      hyphens: none;
     }
   </style>
 <script type="importmap">
