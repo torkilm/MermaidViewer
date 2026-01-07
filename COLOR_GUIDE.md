@@ -9,42 +9,42 @@ The application uses a centralized color system defined in [`constants.tsx`](con
 ```typescript
 export const COLORS = {
   primary: {
-    base: '#0F172A',      // Deep Navy - Main background, headers
-    light: '#1E293B',     // Lighter navy for elevated surfaces
-    lighter: '#334155',   // Even lighter for hover states
+    base: '#0F172A', // Deep Navy - Main background, headers
+    light: '#1E293B', // Lighter navy for elevated surfaces
+    lighter: '#334155', // Even lighter for hover states
   },
   accent: {
-    base: '#06B6D4',      // Cyan - Primary buttons, links
-    hover: '#0891B2',     // Darker cyan for hover
-    light: '#22D3EE',     // Lighter cyan for highlights
+    base: '#06B6D4', // Cyan - Primary buttons, links
+    hover: '#0891B2', // Darker cyan for hover
+    light: '#22D3EE', // Lighter cyan for highlights
   },
   success: {
-    base: '#10B981',      // Emerald - Success states, confirmations
-    hover: '#059669',     // Darker emerald for hover
-    light: '#34D399',     // Lighter emerald for highlights
+    base: '#10B981', // Emerald - Success states, confirmations
+    hover: '#059669', // Darker emerald for hover
+    light: '#34D399', // Lighter emerald for highlights
   },
   warning: {
-    base: '#F59E0B',      // Amber - Warnings, alerts
-    hover: '#D97706',     // Darker amber for hover
-    light: '#FBBF24',     // Lighter amber for highlights
+    base: '#F59E0B', // Amber - Warnings, alerts
+    hover: '#D97706', // Darker amber for hover
+    light: '#FBBF24', // Lighter amber for highlights
   },
   text: {
-    primary: '#F1F5F9',   // Off-white - Primary text
+    primary: '#F1F5F9', // Off-white - Primary text
     secondary: '#CBD5E1', // Lighter gray - Secondary text
-    muted: '#94A3B8',     // Even lighter - Muted text
-    dark: '#64748B',      // Dark gray - Disabled/placeholder
+    muted: '#94A3B8', // Even lighter - Muted text
+    dark: '#64748B', // Dark gray - Disabled/placeholder
   },
   error: {
-    base: '#EF4444',      // Red for errors
-    hover: '#DC2626',     // Darker red for hover
-    light: '#F87171',     // Lighter red for backgrounds
+    base: '#EF4444', // Red for errors
+    hover: '#DC2626', // Darker red for hover
+    light: '#F87171', // Lighter red for backgrounds
   },
   border: {
-    base: '#334155',      // Default border color
-    light: '#475569',     // Lighter border
-    lighter: '#64748B',   // Even lighter border
+    base: '#334155', // Default border color
+    light: '#475569', // Lighter border
+    lighter: '#64748B', // Even lighter border
   },
-}
+};
 ```
 
 ## How to Change Colors
@@ -71,6 +71,7 @@ The Mermaid Go logo uses a gradient. To change it:
 ## Color Usage by Component
 
 ### Editor (`components/Editor.tsx`)
+
 - Background: `COLORS.primary.base`
 - Borders: `COLORS.border.base`
 - Generate button: `COLORS.accent.base` with hover effect
@@ -78,6 +79,7 @@ The Mermaid Go logo uses a gradient. To change it:
 - Error indicator: `COLORS.error.base`
 
 ### Viewer (`components/Viewer.tsx`)
+
 - Background: `COLORS.primary.base`
 - Loading spinner: `COLORS.accent.base`
 - Share button: `COLORS.accent.base` (or `COLORS.success.base` when copied)
@@ -86,12 +88,14 @@ The Mermaid Go logo uses a gradient. To change it:
 - Error messages: `COLORS.error.base`
 
 ### Footer (`components/Footer.tsx`)
+
 - Background: `COLORS.primary.base`
 - Borders: `COLORS.border.base`
 
 ## Design Philosophy
 
 The color palette is designed to:
+
 - Provide clear visual hierarchy
 - Maintain accessibility (good contrast ratios)
 - Support different UI states (hover, active, disabled)

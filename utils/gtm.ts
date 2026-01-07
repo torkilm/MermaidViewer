@@ -8,11 +8,11 @@ const GA_ID = 'G-8SC5M2QV91';
 export const initializeGTM = (): void => {
   // Initialize dataLayer
   window.dataLayer = window.dataLayer || [];
-  
-  function gtag(...args: any[]) {
+
+  function gtag(...args: unknown[]) {
     window.dataLayer.push(args);
   }
-  
+
   gtag('js', new Date());
   gtag('config', GA_ID);
 
@@ -20,7 +20,7 @@ export const initializeGTM = (): void => {
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  
+
   const firstScript = document.getElementsByTagName('script')[0];
   firstScript.parentNode?.insertBefore(script, firstScript);
 };
@@ -41,6 +41,6 @@ export const hasRespondedToConsent = (): boolean => {
 // Declare dataLayer type
 declare global {
   interface Window {
-    dataLayer: any[];
+    dataLayer: unknown[];
   }
 }
