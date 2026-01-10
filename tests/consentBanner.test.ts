@@ -1,6 +1,8 @@
+import { describe, test, expect, beforeEach } from 'vitest';
+
 /**
  * Test for ConsentBanner behavior
- *
+ * 
  * This test validates that the consent banner appears correctly based on user consent status:
  * 1. First-time visitors (no consent record) should see the banner
  * 2. Users who declined consent should see the banner again on return visits
@@ -24,57 +26,52 @@ class LocalStorageMock {
   }
 }
 
-const localStorage = new LocalStorageMock();
-
 // Mock hasGTMConsent function from utils/gtm.ts
-const hasGTMConsent = (): boolean => {
-  return localStorage.getItem('gtm-consent') === 'accepted';
+const createHasGTMConsent = (storage: LocalStorageMock) => {
+  return (): boolean => {
+    return storage.getItem('gtm-consent') === 'accepted';
+  };
 };
 
 // Test the consent banner visibility logic
-function shouldShowConsentBanner(): boolean {
-  // This is the logic from the updated ConsentBanner component
-  return !hasGTMConsent();
-}
+const createShouldShowConsentBanner = (hasGTMConsent: () => boolean) => {
+  return (): boolean => {
+    // This is the logic from the updated ConsentBanner component
+    return !hasGTMConsent();
+  };
+};
 
-// Test cases
-console.log('Testing Consent Banner Visibility Logic\n');
+describe('Consent Banner Visibility Logic', () => {
+  let localStorage: LocalStorageMock;
+  let hasGTMConsent: () => boolean;
+  let shouldShowConsentBanner: () => boolean;
 
-// Test 1: First-time visitor (no consent record)
-console.log('Test 1: First-time visitor');
-localStorage.clear();
-const test1Result = shouldShowConsentBanner();
-console.log(`  - No localStorage consent record`);
-console.log(`  - Should show banner: ${test1Result}`);
-console.log(`  - ✓ PASS: Banner should appear for first-time visitors\n`);
+  beforeEach(() => {
+    localStorage = new LocalStorageMock();
+    hasGTMConsent = createHasGTMConsent(localStorage);
+    shouldShowConsentBanner = createShouldShowConsentBanner(hasGTMConsent);
+  });
 
-// Test 2: User who declined consent
-console.log('Test 2: User who previously declined');
-localStorage.clear();
-localStorage.setItem('gtm-consent', 'declined');
-localStorage.setItem('gtm-consent-date', new Date().toISOString());
-const test2Result = shouldShowConsentBanner();
-console.log(`  - localStorage has 'gtm-consent': 'declined'`);
-console.log(`  - Should show banner: ${test2Result}`);
-console.log(`  - ✓ PASS: Banner should appear again for users who declined\n`);
+  test('First-time visitor (no consent record)', () => {
+    // No localStorage consent record
+    const result = shouldShowConsentBanner();
+    expect(result).toBe(true);
+  });
 
-// Test 3: User who accepted consent
-console.log('Test 3: User who previously accepted');
-localStorage.clear();
-localStorage.setItem('gtm-consent', 'accepted');
-localStorage.setItem('gtm-consent-date', new Date().toISOString());
-const test3Result = shouldShowConsentBanner();
-console.log(`  - localStorage has 'gtm-consent': 'accepted'`);
-console.log(`  - Should show banner: ${test3Result}`);
-console.log(`  - ✓ PASS: Banner should NOT appear for users who accepted\n`);
+  test('User who previously declined', () => {
+    localStorage.setItem('gtm-consent', 'declined');
+    localStorage.setItem('gtm-consent-date', new Date().toISOString());
+    
+    const result = shouldShowConsentBanner();
+    expect(result).toBe(true);
+  });
 
-// Summary
-const allTestsPassed =
-  test1Result === true && test2Result === true && test3Result === false;
-console.log(`\n${'='.repeat(50)}`);
-console.log(`All tests passed: ${allTestsPassed ? '✓ YES' : '✗ NO'}`);
-console.log(`${'='.repeat(50)}`);
+  test('User who previously accepted', () => {
+    localStorage.setItem('gtm-consent', 'accepted');
+    localStorage.setItem('gtm-consent-date', new Date().toISOString());
+    
+    const result = shouldShowConsentBanner();
+    expect(result).toBe(false);
+  });
+});
 
-if (!allTestsPassed) {
-  process.exit(1);
-}
