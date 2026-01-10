@@ -6,6 +6,7 @@ import {
   LinkIcon,
   CheckIcon,
 } from './Icons';
+import { copyToClipboard } from '../utils/clipboardUtils';
 import { COLORS } from '../constants';
 
 interface FooterProps {
@@ -25,12 +26,13 @@ export const Footer: React.FC<FooterProps> = ({
     'Check out Mermaid Viewer - Create and share beautiful diagrams!';
 
   const handleCopyUrl = async () => {
-    try {
-      await navigator.clipboard.writeText(appUrl);
+    const success = await copyToClipboard(appUrl);
+    
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy URL:', err);
+    } else {
+      console.error('Failed to copy URL to clipboard');
     }
   };
 

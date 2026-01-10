@@ -14,6 +14,7 @@ import {
   formatExportFilename,
   getShareableUrl,
 } from '../utils/exportUtils';
+import { copyToClipboard } from '../utils/clipboardUtils';
 import { Footer } from './Footer';
 import { COLORS } from '../constants';
 
@@ -243,15 +244,17 @@ export const Viewer: React.FC<ViewerProps> = ({
   };
 
   const handleShare = async () => {
-    try {
-      const url = isEdited
-        ? getShareableUrl(code, title, 'viewer')
-        : 'https://mermaidstudio.io';
-      await navigator.clipboard.writeText(url);
+    const url = isEdited
+      ? getShareableUrl(code, title, 'viewer')
+      : 'https://mermaidstudio.io';
+    
+    const success = await copyToClipboard(url);
+    
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy URL:', err);
+    } else {
+      console.error('Failed to copy URL to clipboard');
     }
   };
 
