@@ -14,8 +14,11 @@ export const Privacy: React.FC<PrivacyProps> = ({ onBack }) => {
     >
       {/* Header */}
       <div
-        className="sticky top-0 z-10 border-b"
+        className="border-b"
         style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
           backgroundColor: COLORS.primary.base,
           borderColor: COLORS.border.base,
         }}
