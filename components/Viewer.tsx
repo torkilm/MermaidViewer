@@ -349,15 +349,10 @@ export const Viewer: React.FC<ViewerProps> = ({
 
   return (
     <div
-      className="flex flex-col h-full"
-      style={{ backgroundColor: COLORS.primary.base }}
+      className="flex flex-col h-full bg-ms-primary"
     >
       <header
-        className="flex items-center justify-between px-6 py-4 border-b shrink-0 z-20"
-        style={{
-          backgroundColor: COLORS.primary.base,
-          borderColor: COLORS.border.base,
-        }}
+        className="flex items-center justify-between px-6 py-4 border-b border-ms-border shrink-0 z-20 bg-ms-primary"
       >
         <div className="flex items-center gap-3">
           <button
@@ -414,31 +409,18 @@ export const Viewer: React.FC<ViewerProps> = ({
         {isLoading ? (
           <div className="flex flex-col items-center gap-4 z-10">
             <div
-              className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin"
-              style={{
-                borderColor: COLORS.accent.base,
-                borderTopColor: 'transparent',
-              }}
+              className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin border-ms-accent"
             ></div>
-            <p className="font-medium" style={{ color: COLORS.accent.base }}>
+            <p className="font-medium text-ms-accent">
               Rendering...
             </p>
           </div>
         ) : error ? (
           <div
-            className="border rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              borderColor: 'rgba(239, 68, 68, 0.5)',
-              padding: '2rem',
-            }}
+            className="border rounded-3xl max-w-sm w-full text-center z-10 mx-4 shadow-2xl backdrop-blur-sm bg-ms-error/10 border-ms-error/50 p-8"
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{
-                backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                color: COLORS.error.base,
-              }}
+              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 bg-ms-error/20 text-ms-error"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -456,32 +438,18 @@ export const Viewer: React.FC<ViewerProps> = ({
               </svg>
             </div>
             <h3
-              className="font-bold text-lg mb-2"
-              style={{ color: COLORS.error.light }}
+              className="font-bold text-lg mb-2 text-ms-error-light"
             >
               Rendering Error
             </h3>
             <p
-              className="text-sm leading-relaxed mb-6 font-mono break-words"
-              style={{ color: COLORS.text.secondary }}
+              className="text-sm leading-relaxed mb-6 font-mono break-words text-ms-text-secondary"
             >
               {error}
             </p>
             <button
               onClick={onBack}
-              className="w-full py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all active:scale-95"
-              style={{
-                backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                color: COLORS.text.primary,
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  'rgba(239, 68, 68, 0.3)')
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  'rgba(239, 68, 68, 0.2)')
-              }
+              className="w-full py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all active:scale-95 bg-ms-error/20 hover:bg-ms-error/30 text-ms-text-primary"
             >
               Back to Editor
             </button>
@@ -516,11 +484,7 @@ export const Viewer: React.FC<ViewerProps> = ({
 
         {!isLoading && !error && (
           <div
-            className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 backdrop-blur-md p-1.5 rounded-2xl border shadow-2xl z-20"
-            style={{
-              backgroundColor: 'rgba(30, 41, 59, 0.8)',
-              borderColor: COLORS.border.base,
-            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 backdrop-blur-md p-1.5 rounded-2xl border border-ms-border shadow-2xl z-20 bg-ms-primary-light/80"
           >
             <button
               onClick={handleZoomIn}
@@ -602,49 +566,19 @@ export const Viewer: React.FC<ViewerProps> = ({
       </main>
 
       <div
-        className="p-4 pb-8 backdrop-blur-md border-t shrink-0 z-20"
-        style={{
-          backgroundColor: 'rgba(15, 23, 42, 0.8)',
-          borderColor: COLORS.border.base,
-        }}
+        className="p-4 pb-8 backdrop-blur-md border-t border-ms-border shrink-0 z-20 bg-ms-primary/80"
       >
         <div className="flex gap-3 max-w-3xl mx-auto">
           <button
             onClick={onBack}
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl transition-all active:scale-[0.98]"
-            style={{
-              backgroundColor: COLORS.primary.lighter,
-              color: COLORS.text.secondary,
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.border.light)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.primary.lighter)
-            }
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl transition-all active:scale-[0.98] bg-ms-primary-lighter hover:bg-ms-border-light text-ms-text-secondary"
           >
             <span>Back</span>
           </button>
           <button
             onClick={handleShare}
             disabled={!!error || isLoading}
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
-            style={{
-              backgroundColor: copied
-                ? COLORS.success.base
-                : COLORS.accent.base,
-              color: COLORS.text.primary,
-            }}
-            onMouseEnter={(e) =>
-              !copied &&
-              !error &&
-              !isLoading &&
-              (e.currentTarget.style.backgroundColor = COLORS.accent.hover)
-            }
-            onMouseLeave={(e) =>
-              !copied &&
-              (e.currentTarget.style.backgroundColor = COLORS.accent.base)
-            }
+            className={`flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none text-ms-text-primary ${copied ? 'bg-ms-success' : 'bg-ms-accent hover:bg-ms-accent-hover'}`}
           >
             {copied ? (
               <CheckIcon className="w-5 h-5" />
@@ -656,19 +590,7 @@ export const Viewer: React.FC<ViewerProps> = ({
           <button
             onClick={downloadSvg}
             disabled={!!error || isLoading}
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
-            style={{
-              backgroundColor: COLORS.success.base,
-              color: COLORS.text.primary,
-            }}
-            onMouseEnter={(e) =>
-              !error &&
-              !isLoading &&
-              (e.currentTarget.style.backgroundColor = COLORS.success.hover)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.success.base)
-            }
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none bg-ms-success hover:bg-ms-success-hover text-ms-text-primary"
           >
             <DownloadIcon className="w-5 h-5" />
             <span className="text-base">SVG</span>
@@ -676,19 +598,7 @@ export const Viewer: React.FC<ViewerProps> = ({
           <button
             onClick={downloadPng}
             disabled={!!error || isLoading}
-            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
-            style={{
-              backgroundColor: COLORS.warning.base,
-              color: COLORS.text.primary,
-            }}
-            onMouseEnter={(e) =>
-              !error &&
-              !isLoading &&
-              (e.currentTarget.style.backgroundColor = COLORS.warning.hover)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.warning.base)
-            }
+            className="flex-1 h-[56px] flex items-center justify-center gap-2 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none bg-ms-warning hover:bg-ms-warning-hover text-ms-text-primary"
           >
             <DownloadIcon className="w-5 h-5" />
             <span className="text-base">PNG</span>
