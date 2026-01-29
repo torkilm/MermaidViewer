@@ -24,11 +24,10 @@ const migrateLocalStorage = () => {
   }
 };
 
+// Run migration immediately when module loads
+migrateLocalStorage();
+
 const App: React.FC = () => {
-  // Run migration once on app initialization
-  React.useEffect(() => {
-    migrateLocalStorage();
-  }, []);
   // Route state - check current pathname for routing
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     const pathname = window.location.pathname;
