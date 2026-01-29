@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({
   // Share the app itself, not a specific diagram
   const appUrl = `${window.location.origin}${window.location.pathname}`;
   const shareText =
-    'Check out Mermaid Viewer - Create and share beautiful diagrams!';
+    'Check out Mermaid Studio - Create and share beautiful diagrams!';
 
   const handleCopyUrl = async () => {
     const success = await copyToClipboard(appUrl);
@@ -63,13 +63,13 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Share Section */}
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="text-slate-400 text-sm font-medium mr-2">
-            Share Mermaid Viewer:
+            Share Mermaid Studio:
           </span>
 
           <button
             onClick={handleFacebookShare}
             className="p-2.5 text-slate-400 hover:text-blue-500 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-            title="Share Mermaid Viewer on Facebook"
+            title="Share Mermaid Studio on Facebook"
             aria-label="Share on Facebook"
           >
             <FacebookIcon className="w-5 h-5" />
@@ -78,7 +78,7 @@ export const Footer: React.FC<FooterProps> = ({
           <button
             onClick={handleLinkedInShare}
             className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-            title="Share Mermaid Viewer on LinkedIn"
+            title="Share Mermaid Studio on LinkedIn"
             aria-label="Share on LinkedIn"
           >
             <LinkedInIcon className="w-5 h-5" />
@@ -87,7 +87,7 @@ export const Footer: React.FC<FooterProps> = ({
           <button
             onClick={handleTwitterShare}
             className="p-2.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-            title="Share Mermaid Viewer on Twitter"
+            title="Share Mermaid Studio on Twitter"
             aria-label="Share on Twitter"
           >
             <TwitterIcon className="w-5 h-5" />

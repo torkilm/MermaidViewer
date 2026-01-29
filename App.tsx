@@ -10,7 +10,25 @@ import { GuidePage } from './components/GuidePage';
 import { getDiagramFromUrl, updateUrlWithDiagram } from './utils/exportUtils';
 import { initializeGTM, hasGTMConsent } from './utils/gtm';
 
+// Migration: rename old localStorage keys to new keys
+const migrateLocalStorage = () => {
+  const oldCode = localStorage.getItem('mermaid-go-code');
+  const oldTitle = localStorage.getItem('mermaid-go-title');
+  if (oldCode && !localStorage.getItem('mermaid-studio-code')) {
+    localStorage.setItem('mermaid-studio-code', oldCode);
+    localStorage.removeItem('mermaid-go-code');
+  }
+  if (oldTitle && !localStorage.getItem('mermaid-studio-title')) {
+    localStorage.setItem('mermaid-studio-title', oldTitle);
+    localStorage.removeItem('mermaid-go-title');
+  }
+};
+
 const App: React.FC = () => {
+  // Run migration once on app initialization
+  React.useEffect(() => {
+    migrateLocalStorage();
+  }, []);
   // Route state - check current pathname for routing
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     const pathname = window.location.pathname;
@@ -28,7 +46,7 @@ const App: React.FC = () => {
     }
 
     // Fall back to localStorage
-    const saved = localStorage.getItem('mermaid-go-code');
+    const saved = localStorage.getItem('mermaid-studio-code');
     return saved || DEFAULT_MERMAID_CODE;
   });
 
@@ -52,7 +70,7 @@ const App: React.FC = () => {
     }
 
     // Fall back to localStorage
-    const saved = localStorage.getItem('mermaid-go-title');
+    const saved = localStorage.getItem('mermaid-studio-title');
     return saved || APP_TITLE;
   });
 
@@ -81,8 +99,8 @@ const App: React.FC = () => {
   // Debounced Save to LocalStorage
   const performSave = useCallback(
     (currentCode: string, currentTitle: string) => {
-      localStorage.setItem('mermaid-go-code', currentCode);
-      localStorage.setItem('mermaid-go-title', currentTitle);
+      localStorage.setItem('mermaid-studio-code', currentCode);
+      localStorage.setItem('mermaid-studio-title', currentTitle);
       setIsSaving(false);
     },
     []
