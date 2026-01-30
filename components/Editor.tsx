@@ -179,7 +179,7 @@ export const Editor: React.FC<EditorProps> = ({
         </div>
       </header>
 
-      <main className="flex-1 p-4 flex flex-col gap-4 overflow-hidden">
+      <main id="main-content" className="flex-1 p-4 flex flex-col gap-4 overflow-hidden">
         <div
           className="flex-1 relative rounded-2xl border border-ms-border overflow-hidden shadow-inner group bg-ms-primary-light"
         >
