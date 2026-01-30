@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { COLORS } from '../constants';
 import { hasGTMConsent, setGTMConsent } from '../utils/gtm';
 
 interface ConsentBannerProps {
@@ -39,23 +38,17 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 p-4 pb-safe backdrop-blur-md border-t"
-      style={{
-        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-        borderColor: COLORS.border.base,
-      }}
+      className="fixed bottom-0 left-0 right-0 z-50 p-4 pb-safe backdrop-blur-md border-t border-ms-border bg-ms-primary/95"
     >
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3
-            className="font-bold text-lg mb-2"
-            style={{ color: COLORS.text.primary }}
+            className="font-bold text-lg mb-2 text-ms-text-primary"
           >
             Analytics & Cookies
           </h3>
           <p
-            className="text-sm leading-relaxed"
-            style={{ color: COLORS.text.secondary }}
+            className="text-sm leading-relaxed text-ms-text-secondary"
           >
             We use analytics to understand how you use Mermaid Studio and
             improve your experience. Your diagrams remain private and are never
@@ -63,8 +56,7 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
             features.{' '}
             <button
               onClick={onNavigateToPrivacy}
-              className="underline hover:opacity-80"
-              style={{ color: COLORS.accent.base }}
+              className="underline hover:opacity-80 text-ms-accent"
             >
               Learn more in our Privacy Policy
             </button>
@@ -74,33 +66,13 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
         <div className="flex gap-3">
           <button
             onClick={handleDecline}
-            className="flex-1 h-12 font-semibold rounded-xl transition-all active:scale-[0.98]"
-            style={{
-              backgroundColor: COLORS.primary.lighter,
-              color: COLORS.text.secondary,
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.border.light)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.primary.lighter)
-            }
+            className="flex-1 h-12 font-semibold rounded-xl transition-all active:scale-[0.98] bg-ms-primary-lighter hover:bg-ms-border-light text-ms-text-secondary"
           >
             Decline
           </button>
           <button
             onClick={handleAccept}
-            className="flex-1 h-12 font-semibold rounded-xl shadow-lg transition-all active:scale-[0.98]"
-            style={{
-              backgroundColor: COLORS.accent.base,
-              color: COLORS.text.primary,
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.accent.hover)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = COLORS.accent.base)
-            }
+            className="flex-1 h-12 font-semibold rounded-xl shadow-lg transition-all active:scale-[0.98] bg-ms-accent hover:bg-ms-accent-hover text-ms-text-primary"
           >
             Accept Analytics
           </button>

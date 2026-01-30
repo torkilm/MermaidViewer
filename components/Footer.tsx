@@ -7,7 +7,6 @@ import {
   CheckIcon,
 } from './Icons';
 import { copyToClipboard } from '../utils/clipboardUtils';
-import { COLORS } from '../constants';
 
 interface FooterProps {
   onNavigateToPrivacy: () => void;
@@ -53,11 +52,7 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer
-      className="border-t py-4 px-6"
-      style={{
-        backgroundColor: COLORS.primary.base,
-        borderColor: COLORS.border.base,
-      }}
+      className="border-t border-ms-border py-4 px-6 bg-ms-primary"
     >
       <div className="max-w-4xl mx-auto">
         {/* Share Section */}
@@ -117,17 +112,15 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <button
             onClick={onNavigateToGuide}
-            className="text-sm font-medium hover:underline transition-all px-3 py-1.5 rounded-lg hover:bg-slate-800"
-            style={{ color: COLORS.accent.base }}
+            className="text-sm font-medium hover:underline transition-all px-3 py-1.5 rounded-lg hover:bg-slate-800 text-ms-accent"
             aria-label="View Mermaid Guide"
           >
             📚 Mermaid Guide
           </button>
-          <span style={{ color: COLORS.border.base }}>•</span>
+          <span className="text-ms-border">•</span>
           <button
             onClick={onNavigateToPrivacy}
-            className="text-sm hover:underline transition-all px-3 py-1.5 rounded-lg hover:bg-slate-800"
-            style={{ color: COLORS.text.muted }}
+            className="text-sm hover:underline transition-all px-3 py-1.5 rounded-lg hover:bg-slate-800 text-ms-text-muted"
             aria-label="View Privacy Policy"
           >
             Privacy Policy

@@ -10,7 +10,6 @@ import {
 import { Footer } from './Footer';
 import { SyntaxHighlighter } from './SyntaxHighlighter';
 import { validateMermaidSyntax, SyntaxError } from '../utils/syntaxValidator';
-import { COLORS } from '../constants';
 
 interface EditorProps {
   code: string;
@@ -76,15 +75,10 @@ export const Editor: React.FC<EditorProps> = ({
 
   return (
     <div
-      className="flex flex-col h-full"
-      style={{ backgroundColor: COLORS.primary.base }}
+      className="flex flex-col h-full bg-ms-primary"
     >
       <header
-        className="flex items-center justify-between px-6 py-4 border-b shrink-0"
-        style={{
-          backgroundColor: COLORS.primary.base,
-          borderColor: COLORS.border.base,
-        }}
+        className="flex items-center justify-between px-6 py-4 border-b border-ms-border shrink-0 bg-ms-primary"
       >
         <div className="flex items-center gap-3 shrink-0">
           <a
@@ -109,21 +103,17 @@ export const Editor: React.FC<EditorProps> = ({
           />
           <div className="flex items-center gap-1.5 mt-1">
             <span
-              className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'animate-pulse' : ''}`}
-              style={{
-                color: isSaving ? COLORS.accent.base : COLORS.text.dark,
-              }}
+              className={`text-[10px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isSaving ? 'animate-pulse text-ms-accent' : 'text-ms-text-dark'}`}
             >
               {isSaving ? 'Saving...' : 'Saved locally'}
             </span>
             {!isSaving && (
               <svg
-                className="w-3 h-3"
+                className="w-3 h-3 text-ms-success"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth="3"
-                style={{ color: COLORS.success.base }}
               >
                 <path
                   strokeLinecap="round"
@@ -134,12 +124,11 @@ export const Editor: React.FC<EditorProps> = ({
             )}
             {syntaxErrors.length > 0 && (
               <>
-                <span className="mx-1" style={{ color: COLORS.text.dark }}>
+                <span className="mx-1 text-ms-text-dark">
                   •
                 </span>
                 <span
-                  className="text-[10px] font-bold uppercase tracking-widest"
-                  style={{ color: COLORS.error.base }}
+                  className="text-[10px] font-bold uppercase tracking-widest text-ms-error"
                 >
                   {syntaxErrors.length}{' '}
                   {syntaxErrors.length === 1 ? 'Error' : 'Errors'}
@@ -192,22 +181,14 @@ export const Editor: React.FC<EditorProps> = ({
 
       <main className="flex-1 p-4 flex flex-col gap-4 overflow-hidden">
         <div
-          className="flex-1 relative rounded-2xl border overflow-hidden shadow-inner group"
-          style={{
-            backgroundColor: COLORS.primary.light,
-            borderColor: COLORS.border.base,
-          }}
+          className="flex-1 relative rounded-2xl border border-ms-border overflow-hidden shadow-inner group bg-ms-primary-light"
         >
           <div className="absolute top-3 right-4 z-10 opacity-40 text-xs font-mono uppercase tracking-widest pointer-events-none group-focus-within:opacity-100 transition-opacity">
             Mermaid Editor
           </div>
           <div className="relative w-full h-full flex">
             <div
-              className="shrink-0 py-6 pl-4 pr-2 border-r select-none pointer-events-none overflow-hidden"
-              style={{
-                backgroundColor: 'rgba(15, 23, 42, 0.5)',
-                borderColor: COLORS.border.base,
-              }}
+              className="shrink-0 py-6 pl-4 pr-2 border-r border-ms-border select-none pointer-events-none overflow-hidden bg-ms-primary/50"
             >
               {Array.from({ length: lineCount }, (_, index) => (
                 <div
@@ -268,25 +249,11 @@ export const Editor: React.FC<EditorProps> = ({
       </main>
 
       <div
-        className="p-4 pb-8 backdrop-blur-md border-t shrink-0"
-        style={{
-          backgroundColor: 'rgba(15, 23, 42, 0.8)',
-          borderColor: COLORS.border.base,
-        }}
+        className="p-4 pb-8 backdrop-blur-md border-t border-ms-border shrink-0 bg-ms-primary/80"
       >
         <button
           onClick={onGenerate}
-          className="w-full h-[56px] flex items-center justify-center gap-3 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98]"
-          style={{
-            backgroundColor: COLORS.accent.base,
-            color: COLORS.text.primary,
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = COLORS.accent.hover)
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = COLORS.accent.base)
-          }
+          className="w-full h-[56px] flex items-center justify-center gap-3 font-bold rounded-2xl shadow-xl transition-all transform active:scale-[0.98] bg-ms-accent hover:bg-ms-accent-hover text-ms-text-primary"
         >
           <PlayIcon className="w-6 h-6" />
           <span className="text-lg">Generate Diagram</span>
