@@ -116,7 +116,7 @@ export const GuidePage: React.FC<GuidePageProps> = ({ onBack }) => {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8 pb-24">
+      <div id="main-content" className="max-w-4xl mx-auto px-6 py-8 pb-24">
         <div className="space-y-12">
           {/* Introduction */}
           <section>
