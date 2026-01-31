@@ -395,7 +395,7 @@ export const Viewer: React.FC<ViewerProps> = ({
         </button>
       </header>
 
-      <main className="flex-1 relative overflow-hidden flex flex-col items-center justify-center">
+      <main id="main-content" className="flex-1 relative overflow-hidden flex flex-col items-center justify-center">
         <div className="absolute inset-0 pointer-events-none opacity-10">
           <div
             className="w-full h-full"
