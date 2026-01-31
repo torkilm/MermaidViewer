@@ -441,7 +441,7 @@ export const Privacy: React.FC<PrivacyProps> = ({ onBack }) => {
                 If you have questions about this privacy policy or how we handle
                 your data, please open an issue on our{' '}
                 <a
-                  href="https://github.com/torkilm/MermaidViewer/issues"
+                  href="https://github.com/torkilm/MermaidViewer"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:opacity-80"
